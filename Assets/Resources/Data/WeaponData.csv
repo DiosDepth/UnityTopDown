@@ -1,0 +1,3 @@
+ID,Type,Name,Prefab
+1,Melee,Sword,\Asset\Resources\GamePrefab\AI\Bear
+2,Projectile,ShotGun,\Asset\Resources\GamePrefab\AI\Wolf
