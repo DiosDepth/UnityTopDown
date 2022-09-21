@@ -24,9 +24,10 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
     [Header("---MovementInfo---")]
     
     public Vector3 inputDirection;
-    public Vector3 moveDirection;
+    public Vector3 lerpedInput;
     public Vector3 deltaMovement;
     public float deltaSpeed;
+    public float deltaAcceleration;
     /// <summary>
     /// normalized face direction
     /// </summary>
@@ -106,11 +107,6 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
         inputDirection.x = callbackContext.ReadValue<Vector2>().x;
         inputDirection.y = callbackContext.ReadValue<Vector2>().y;
 
-        if (callbackContext.performed)
-        {
-            moveDirection = inputDirection;
-        }
-
     }
 
     public override void HandleInput(InputAction.CallbackContext callbackContext)
@@ -153,6 +149,10 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
     public override void AfterUpdateAbility()
     {
         base.AfterUpdateAbility();
+        if (movementType == MovementType.Physicals)
+        {
+            CharacterMovement(movementType);
+        }
     }
 
     public override void EarlyFixedUpdateAbility()
@@ -162,10 +162,7 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
 
     public override void FixedUpdateAbility()
     {
-        if(movementType == MovementType.Physicals)
-        {
-            CharacterMovement(movementType);
-        }
+
         
     }
     public override void OnRemove()
@@ -176,31 +173,11 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
 
     private void CharacterMovement(MovementType m_movement_type)
     {
-        if(inputDirection.sqrMagnitude!=0)
-        {
-            deltaSpeed = _tdCharacterController.CalculateDeltaMoveSpeed(deltaSpeed, acceleration, maxMoveSpeed);
-            if (Mathf.Approximately(deltaSpeed, maxMoveSpeed))
-            {
-                deltaSpeed = maxMoveSpeed;
-            }
-            deltaMovement = deltaSpeed * moveDirection;
-        }
-        else
-        {
-            deltaSpeed = _tdCharacterController.CalculateDeltaMoveSpeed(deltaSpeed, -1* acceleration, maxMoveSpeed);
-            if(Mathf.Approximately(deltaSpeed,0))
-            {
-                deltaSpeed = 0;
-            }
-            deltaMovement = deltaSpeed * moveDirection;
-
-        }
-        
         base.FixedUpdateAbility();
         if (owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Skill ||
             owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Attack ||
-            owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Chargeing||
-            owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.ChargeingAttack||
+            owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Chargeing ||
+            owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.ChargeingAttack ||
             owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Charged)
         {
             return;
@@ -215,14 +192,33 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
             return;
         }
 
+        if (inputDirection.sqrMagnitude!=0)
+        {
+            deltaAcceleration = Mathf.Lerp(deltaAcceleration, 1, acceleration * Time.deltaTime);
+            lerpedInput = Vector2.ClampMagnitude(inputDirection, deltaAcceleration);
+        }
+        else
+        {
+            deltaAcceleration = Mathf.Lerp(deltaAcceleration, 0, acceleration * Time.deltaTime);
+            lerpedInput = Vector2.Lerp(lerpedInput, lerpedInput * deltaAcceleration, acceleration * Time.deltaTime);
+ 
+        }
 
+        deltaMovement = lerpedInput;
+        deltaSpeed = Mathf.Lerp(deltaSpeed, maxMoveSpeed, deltaAcceleration * Time.deltaTime);
+        deltaMovement *= deltaSpeed;
+
+        if (deltaMovement.magnitude > maxMoveSpeed)
+        {
+            deltaMovement = Vector3.ClampMagnitude(deltaMovement, maxMoveSpeed);
+        }
 
         if (deltaMovement.sqrMagnitude > 0)
         {
-            _tdCharacterController.ApplyMovement(m_movement_type, deltaMovement);// move character
+            _tdCharacterController.ApplyMovement(deltaMovement);// move character
             if (isFlipCharacter)// rotate character if true
             {
-                if (_tdCharacterController.IsMoving(m_movement_type, deltaMovement))// see if character is moving 
+                if (_tdCharacterController.IsMoving())// see if character is moving 
                 {
                     FlipCharacter();//  Flip Charater 
                 }
@@ -234,7 +230,7 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
         }
         else
         {
-            _tdCharacterController.StopMovement(m_movement_type);
+            _tdCharacterController.StopMovement();
             if (owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Move || owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Null)
             {
                 owner.movementState.ChangeState(TDEnums.CharacterStates.MovementStates.Idle);

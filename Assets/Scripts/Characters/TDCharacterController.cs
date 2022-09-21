@@ -5,8 +5,8 @@ using UnityEngine;
 //[RequireComponent(typeof(Rigidbody))]
 public class TDCharacterController : MonoBehaviour
 {
-    
-    public CharacterController cc;
+
+    public Vector3 movement;
     public Rigidbody2D rb;
     // Start is called before the first frame update
 
@@ -15,7 +15,7 @@ public class TDCharacterController : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        cc = GetComponent<CharacterController>();
+
     }
     void Start()
     {
@@ -36,67 +36,25 @@ public class TDCharacterController : MonoBehaviour
     private void FixedUpdate()
     {
 
+
+        Vector2 newMovement = rb.position + new Vector2(movement.x * Time.fixedDeltaTime, movement.y * Time.fixedDeltaTime);
+        rb.MovePosition(newMovement);
+
     }
 
-    public float CalculateDeltaMoveSpeed(float m_currentspeed, float m_acceleration, float m_maxspeed)
+
+
+    public void ApplyMovement( Vector3 m_movement)
     {
 
-        if(m_acceleration >0)
-        {
-            return  Mathf.Lerp(m_currentspeed, m_maxspeed, m_acceleration * Time.fixedDeltaTime);
-        }
-
-        if(m_acceleration <0)
-        {
-            return Mathf.Lerp(m_currentspeed, 0, -1*m_acceleration * Time.fixedDeltaTime);
-        }
-        return 0;
+        movement = m_movement;
     }
 
-    public void ApplyMovement(MovementType type, Vector3 m_movement)
+    public void StopMovement( )
     {
 
-        switch(type)
-        {
-            case MovementType.NonPhysical:
-                if (cc == null)
-                {
-                    Debug.Log("TDCharacterController : " + "Can't find charactercontroller on this object!");
-                    return;
-                }
-                cc.Move(m_movement * Time.fixedDeltaTime);
-                break;
-            case MovementType.Physicals:
-                if (rb == null)
-                {
-                    Debug.Log("TDCharacterController : " + "Can't find rigidbody on this object!");
-                    return;
-                }
-                rb.MovePosition(rb.position + new Vector2(m_movement.x,m_movement.y));
-       
-
-
-               //rb.velocity = new Vector3(0, 0, 0);
-                //rb.velocity = m_movement * Time.fixedDeltaTime;
-                break;
-        }
-
-      
-    }
-
-    public void StopMovement(MovementType type)
-    {
-        switch (type)
-        {
-            case MovementType.NonPhysical:
-                
-                cc.Move(Vector3.zero);
-                break;
-            case MovementType.Physicals:
-                rb.velocity = new Vector3(0, 0, 0);
-                break;
-        }
-    
+        rb.velocity = new Vector3(0, 0, 0);
+        
     }
 
     public void DebugVelocity()
