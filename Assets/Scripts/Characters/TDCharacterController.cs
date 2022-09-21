@@ -10,6 +10,8 @@ public class TDCharacterController : MonoBehaviour
     public Rigidbody2D rb;
     // Start is called before the first frame update
 
+
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -36,20 +38,19 @@ public class TDCharacterController : MonoBehaviour
 
     }
 
-    public Vector3 CalculateMovement(Vector3 m_dir, float m_speed)
+    public float CalculateDeltaMoveSpeed(float m_currentspeed, float m_acceleration, float m_maxspeed)
     {
-        if(m_dir == null)
+
+        if(m_acceleration >0)
         {
-            return Vector3.zero;
-        }
-        Vector3 tempDir = m_dir;
-        if(tempDir.sqrMagnitude > 1)
-        {
-            tempDir = tempDir.normalized;
+            return  Mathf.Lerp(m_currentspeed, m_maxspeed, m_acceleration * Time.fixedDeltaTime);
         }
 
-        tempDir = tempDir * m_speed;
-        return tempDir;
+        if(m_acceleration <0)
+        {
+            return Mathf.Lerp(m_currentspeed, 0, -1*m_acceleration * Time.fixedDeltaTime);
+        }
+        return 0;
     }
 
     public void ApplyMovement(MovementType type, Vector3 m_movement)
@@ -71,8 +72,12 @@ public class TDCharacterController : MonoBehaviour
                     Debug.Log("TDCharacterController : " + "Can't find rigidbody on this object!");
                     return;
                 }
-                rb.velocity = new Vector3(0, 0, 0);
-                rb.velocity = m_movement * Time.fixedDeltaTime;
+                rb.MovePosition(rb.position + new Vector2(m_movement.x,m_movement.y));
+       
+
+
+               //rb.velocity = new Vector3(0, 0, 0);
+                //rb.velocity = m_movement * Time.fixedDeltaTime;
                 break;
         }
 

@@ -200,14 +200,17 @@ MonoBehaviour:
   animator: {fileID: 0}
   isShowDebug: 0
   movementType: 1
-  moveSpeed: 100
+  maxMoveSpeed: 0.2
+  acceleration: 5
   isFlipCharacter: 1
   rotSpeed: 720
   rotationRoot: {fileID: 4000013401435556}
   movementForbiden: 0
   rotationForbiden: 0
-  movement: {x: 0, y: 0, z: 0}
+  inputDirection: {x: 0, y: 0, z: 0}
   moveDirection: {x: 0, y: 0, z: 0}
+  deltaMovement: {x: 0, y: 0, z: 0}
+  deltaSpeed: 0
   faceDirection: {x: 0, y: 0, z: 0}
 --- !u!114 &114372966451318376
 MonoBehaviour:
@@ -461,6 +464,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1084275116440256091, guid: b197c916d0627cb4784af02e1670f550,
         type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084275116440256091, guid: b197c916d0627cb4784af02e1670f550,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -476,6 +484,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1084275116440256091, guid: b197c916d0627cb4784af02e1670f550,
         type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.557158
+      objectReference: {fileID: 0}
+    - target: {fileID: 1084275116440256091, guid: b197c916d0627cb4784af02e1670f550,
+        type: 3}
       propertyPath: m_LocalRotation.x
       value: -0
       objectReference: {fileID: 0}
@@ -488,16 +501,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1084275116440256091, guid: b197c916d0627cb4784af02e1670f550,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.557158
-      objectReference: {fileID: 0}
-    - target: {fileID: 1084275116440256091, guid: b197c916d0627cb4784af02e1670f550,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1084275116440256091, guid: b197c916d0627cb4784af02e1670f550,
         type: 3}
