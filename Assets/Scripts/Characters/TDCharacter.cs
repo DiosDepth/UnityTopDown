@@ -96,7 +96,7 @@ public class TDCharacter : MonoBehaviour
     {
         if (characterAnimator == null)
         {
-            characterAnimator = GetComponent<Animator>();
+            characterAnimator = GetComponentInChildren<Animator>();
         }
     }
     // Update is called once per frame

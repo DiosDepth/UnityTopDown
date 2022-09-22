@@ -24,7 +24,7 @@ public class InputSystemManager : Singleton<InputSystemManager>
     public TDCharacterController targetController;
     protected Vector3 _inputMovement = Vector3.zero;
 
-    public PlayerInput _playerInput;
+    public PlayerInput playerInput;
     public override void Awake()
     {
         base.Awake();
@@ -42,7 +42,7 @@ public class InputSystemManager : Singleton<InputSystemManager>
     public override void Initialization()
     {
         base.Initialization();
-        _playerInput = GetComponent<PlayerInput>();
+        playerInput = GetComponent<PlayerInput>();
         Debug.Log("InputSystemManager" +" : " + instance.gameObject.name);
         TDManagerEvent.Trigger(ManagerEventType.InitialCompleted, this.gameObject.name);
     }

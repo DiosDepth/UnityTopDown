@@ -35,8 +35,9 @@ public class TDCharacterController : MonoBehaviour
 
     private void FixedUpdate()
     {
-
-
+        //todo handle exceptional state such as forzen 
+        //todo handle force apply
+        //todo handle moving platform
         Vector2 newMovement = rb.position + new Vector2(movement.x * Time.fixedDeltaTime, movement.y * Time.fixedDeltaTime);
         rb.MovePosition(newMovement);
 

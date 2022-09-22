@@ -5,6 +5,15 @@ using TDEnums;
 using UnityEngine.InputSystem;
 
 [System.Serializable]
+public struct AnimationParamInfo
+{
+    public string paramaterName;
+    public AnimatorControllerParameterType paramaterType;
+}
+
+
+
+[System.Serializable]
 public class TDCharacterAbility : MonoBehaviour
 {
     
@@ -137,20 +146,21 @@ public class TDCharacterAbility : MonoBehaviour
     {
 
     }
+
     //update ability animator, which is character animator, you should see BindAnimator() where bind animator to owner.characterAnimator which is character's animator
     public virtual void UpdateAnimators()
     {
     }
 
-    protected virtual void RegisterAnimatorParameter(string parameterName, AnimatorControllerParameterType parameterType)
+    protected virtual void RegisterAnimatorParameter(AnimationParamInfo m_paraminfo)
     {
         if (animator == null)
         {
             return;
         }
-        if (animator.HasParameterOfType(parameterName, parameterType))
+        if (animator.HasParameterOfType(m_paraminfo.paramaterName, m_paraminfo.paramaterType))
         {
-            owner.characterAnimatorParameters.Add(parameterName);
+            owner.characterAnimatorParameters.Add(m_paraminfo.paramaterName);
         }
     }
 

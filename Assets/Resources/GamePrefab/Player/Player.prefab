@@ -118,7 +118,6 @@ GameObject:
   - component: {fileID: 114038171270093922}
   - component: {fileID: 7155363885906894433}
   - component: {fileID: 114088543553715488}
-  - component: {fileID: 95101132531523400}
   - component: {fileID: 1122693505232180009}
   - component: {fileID: 3381254458946842379}
   m_Layer: 9
@@ -156,7 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 301a6a14116773e4dbeae14081f2cf9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cc: {fileID: 0}
+  movement: {x: 0, y: 0, z: 0}
   rb: {fileID: 0}
 --- !u!114 &114655539019161524
 MonoBehaviour:
@@ -200,18 +199,22 @@ MonoBehaviour:
   animator: {fileID: 0}
   isShowDebug: 0
   movementType: 1
-  maxMoveSpeed: 0.2
-  acceleration: 5
+  maxMoveSpeed: 10
+  acceleration: 10
   isFlipCharacter: 1
   rotSpeed: 720
   rotationRoot: {fileID: 4000013401435556}
   movementForbiden: 0
   rotationForbiden: 0
   inputDirection: {x: 0, y: 0, z: 0}
-  moveDirection: {x: 0, y: 0, z: 0}
+  lerpedInput: {x: 0, y: 0, z: 0}
   deltaMovement: {x: 0, y: 0, z: 0}
   deltaSpeed: 0
+  deltaAcceleration: 0
   faceDirection: {x: 0, y: 0, z: 0}
+  animParam_walk:
+    paramaterName: Move
+    paramaterType: 4
 --- !u!114 &114372966451318376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,25 +330,6 @@ MonoBehaviour:
   owner: {fileID: 0}
   animator: {fileID: 0}
   isShowDebug: 0
---- !u!95 &95101132531523400
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 127094}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: bf7c8f12d07ad124ba78d5432f1d30dd, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!50 &1122693505232180009
 Rigidbody2D:
   serializedVersion: 4

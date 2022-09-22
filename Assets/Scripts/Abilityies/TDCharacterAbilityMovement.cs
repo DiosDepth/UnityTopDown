@@ -32,8 +32,9 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
     /// normalized face direction
     /// </summary>
     public Vector3 faceDirection;
-   
 
+    [Header("---Animation---")]
+    public AnimationParamInfo animParam_walk;
     protected TDCharacterController _tdCharacterController;
     // Start is called before the first frame update
 
@@ -103,10 +104,12 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
             inputDirection.y = 0;
             return;
         }
+    
+            inputDirection.x = callbackContext.ReadValue<Vector2>().x;
+            inputDirection.y = callbackContext.ReadValue<Vector2>().y;
+        
 
-        inputDirection.x = callbackContext.ReadValue<Vector2>().x;
-        inputDirection.y = callbackContext.ReadValue<Vector2>().y;
-
+   
     }
 
     public override void HandleInput(InputAction.CallbackContext callbackContext)
@@ -136,12 +139,6 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
     public override void UpdateAbility()
     {
         base.UpdateAbility();
-        if(movementType == MovementType.NonPhysical)
-        {
-            CharacterMovement(movementType);
-        }
-
-
 
 
     }
@@ -149,10 +146,9 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
     public override void AfterUpdateAbility()
     {
         base.AfterUpdateAbility();
-        if (movementType == MovementType.Physicals)
-        {
-            CharacterMovement(movementType);
-        }
+
+        CharacterMovement(movementType);
+        
     }
 
     public override void EarlyFixedUpdateAbility()
@@ -192,20 +188,33 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
             return;
         }
 
+    
+
         if (inputDirection.sqrMagnitude!=0)
         {
             deltaAcceleration = Mathf.Lerp(deltaAcceleration, 1, acceleration * Time.deltaTime);
+            if (Mathf.Approximately(deltaAcceleration, 1))
+            {
+                deltaAcceleration = 1;
+            }
             lerpedInput = Vector2.ClampMagnitude(inputDirection, deltaAcceleration);
+           
+  
+          
         }
         else
         {
             deltaAcceleration = Mathf.Lerp(deltaAcceleration, 0, acceleration * Time.deltaTime);
+            if(Mathf.Approximately(deltaAcceleration,0))
+            {
+                deltaAcceleration = 0;
+            }
             lerpedInput = Vector2.Lerp(lerpedInput, lerpedInput * deltaAcceleration, acceleration * Time.deltaTime);
  
         }
 
         deltaMovement = lerpedInput;
-        deltaSpeed = Mathf.Lerp(deltaSpeed, maxMoveSpeed, deltaAcceleration * Time.deltaTime);
+        deltaSpeed = Mathf.Lerp(0, maxMoveSpeed, deltaAcceleration);
         deltaMovement *= deltaSpeed;
 
         if (deltaMovement.magnitude > maxMoveSpeed)
@@ -215,7 +224,7 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
 
         if (deltaMovement.sqrMagnitude > 0)
         {
-            _tdCharacterController.ApplyMovement(deltaMovement);// move character
+            _tdCharacterController.ApplyMovement(deltaMovement);// Set movement in controller to move 
             if (isFlipCharacter)// rotate character if true
             {
                 if (_tdCharacterController.IsMoving())// see if character is moving 
@@ -230,6 +239,7 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
         }
         else
         {
+            deltaSpeed = 0;
             _tdCharacterController.StopMovement();
             if (owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Move || owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Null)
             {
@@ -246,5 +256,18 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
         {
             _tdCharacterController.DebugVelocity();
         }
+    }
+
+
+    protected override void InitializeAnimatorParameters()
+    {
+        RegisterAnimatorParameter(animParam_walk);
+
+    }
+    public override void UpdateAnimators()
+    {
+        base.UpdateAnimators();
+        owner.characterAnimator.UpdateAnimationParamBool(animParam_walk.paramaterName, owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Move, owner.characterAnimatorParameters);
+   
     }
 }

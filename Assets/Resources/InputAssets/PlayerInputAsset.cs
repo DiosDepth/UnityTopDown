@@ -185,7 +185,7 @@ public partial class @PlayerInputAsset : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""WSAD"",
                     ""id"": ""9cade029-14ca-4bd9-901c-a03637075ff6"",
-                    ""path"": ""2DVector"",
+                    ""path"": ""2DVector(mode=2)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -295,7 +295,7 @@ public partial class @PlayerInputAsset : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""DPad"",
                     ""id"": ""524e1e30-396b-4c39-b643-d5a565248d45"",
-                    ""path"": ""2DVector"",
+                    ""path"": ""2DVector(mode=2)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -350,7 +350,7 @@ public partial class @PlayerInputAsset : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""Arrow"",
                     ""id"": ""903dbb22-0386-42c4-8954-3977b86083ac"",
-                    ""path"": ""2DVector"",
+                    ""path"": ""2DVector(mode=2)"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
