@@ -84,20 +84,10 @@ public class TDCharacterController : MonoBehaviour
     }
     public bool IsMoving()
     {
-        return rb.velocity.sqrMagnitude != 0;
+        return movement.sqrMagnitude != 0;
     }
 
-    public bool IsMoving(MovementType type,Vector3 mov)
-    {
-        if (type == MovementType.NonPhysical)
-        {
-            return mov.sqrMagnitude != 0;
-        }
-        else
-        {
-            return rb.velocity.sqrMagnitude != 0;
-        }
-    }
+
 
 
     

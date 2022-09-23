@@ -199,10 +199,10 @@ MonoBehaviour:
   animator: {fileID: 0}
   isShowDebug: 0
   movementType: 1
-  maxMoveSpeed: 10
-  acceleration: 10
+  maxMoveSpeed: 7
+  acceleration: 3
+  thresholdMoveSpeed: 0.01
   isFlipCharacter: 1
-  rotSpeed: 720
   rotationRoot: {fileID: 4000013401435556}
   movementForbiden: 0
   rotationForbiden: 0
@@ -338,7 +338,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 127094}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0

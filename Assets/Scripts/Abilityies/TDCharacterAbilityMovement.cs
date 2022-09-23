@@ -16,8 +16,9 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
     public MovementType movementType = MovementType.NonPhysical;
     public float maxMoveSpeed = 10;
     public float acceleration = 10;
+    public float thresholdMoveSpeed = 0.01f;
     public bool isFlipCharacter = true;
-    public float rotSpeed = 10f;
+
     public Transform rotationRoot;
     public bool movementForbiden = false;
     public bool rotationForbiden = false;
@@ -170,6 +171,11 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
     private void CharacterMovement(MovementType m_movement_type)
     {
         base.FixedUpdateAbility();
+        if (movementForbiden)
+        {
+            return;
+        }
+
         if (owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Skill ||
             owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Attack ||
             owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Chargeing ||
@@ -188,19 +194,17 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
             return;
         }
 
-    
 
-        if (inputDirection.sqrMagnitude!=0)
+        //计算当前帧的加速度比例并且对操作输入进行限制, 让其在当前帧内的Magnitude小于或者等于当前帧的加速比例
+
+        if (inputDirection.sqrMagnitude!=0)//当操作输入不为0 也就是有操作输入进来的时候 , 做加速运动
         {
-            deltaAcceleration = Mathf.Lerp(deltaAcceleration, 1, acceleration * Time.deltaTime);
+            deltaAcceleration = Mathf.Lerp(deltaAcceleration, 1, acceleration * Time.deltaTime);//这里计算当前帧的加速度比例, 比如每秒的加速度是acceleration, 当前的加速度会从0开始到1 按照这个比例进行计算, 每一帧积累会无限接近于1
             if (Mathf.Approximately(deltaAcceleration, 1))
             {
                 deltaAcceleration = 1;
             }
             lerpedInput = Vector2.ClampMagnitude(inputDirection, deltaAcceleration);
-           
-  
-          
         }
         else
         {
@@ -209,25 +213,34 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
             {
                 deltaAcceleration = 0;
             }
-            lerpedInput = Vector2.Lerp(lerpedInput, lerpedInput * deltaAcceleration, acceleration * Time.deltaTime);
+            if (deltaAcceleration == 0)
+            {
+                lerpedInput = Vector3.zero;
+            }
+            else
+            {
+                lerpedInput = Vector2.Lerp(lerpedInput, lerpedInput * deltaAcceleration, acceleration * Time.deltaTime);
+            }
+          
  
         }
 
         deltaMovement = lerpedInput;
-        deltaSpeed = Mathf.Lerp(0, maxMoveSpeed, deltaAcceleration);
+        deltaSpeed = Mathf.Lerp(0, maxMoveSpeed, deltaAcceleration);//根据当前帧的加速比例 计算当前帧的移动速度
         deltaMovement *= deltaSpeed;
 
+        //限制最大移动速度
         if (deltaMovement.magnitude > maxMoveSpeed)
         {
             deltaMovement = Vector3.ClampMagnitude(deltaMovement, maxMoveSpeed);
         }
 
-        if (deltaMovement.sqrMagnitude > 0)
+        if (deltaMovement.sqrMagnitude > Mathf.Pow( thresholdMoveSpeed,2))
         {
             _tdCharacterController.ApplyMovement(deltaMovement);// Set movement in controller to move 
             if (isFlipCharacter)// rotate character if true
             {
-                if (_tdCharacterController.IsMoving())// see if character is moving 
+                if (IsMovingByInput())// see if character is moving 
                 {
                     FlipCharacter();//  Flip Charater 
                 }
@@ -240,12 +253,18 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
         else
         {
             deltaSpeed = 0;
+            deltaMovement = Vector3.zero;
             _tdCharacterController.StopMovement();
             if (owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Move || owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Null)
             {
                 owner.movementState.ChangeState(TDEnums.CharacterStates.MovementStates.Idle);
             }
         }
+    }
+
+    public bool IsMovingByInput()
+    {
+        return inputDirection.sqrMagnitude != 0;
     }
 
     
@@ -267,7 +286,7 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
     public override void UpdateAnimators()
     {
         base.UpdateAnimators();
-        owner.characterAnimator.UpdateAnimationParamBool(animParam_walk.paramaterName, owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Move, owner.characterAnimatorParameters);
+        owner.characterAnimator.UpdateAnimationParamBool(animParam_walk.paramaterName, IsMovingByInput(), owner.characterAnimatorParameters);
    
     }
 }
