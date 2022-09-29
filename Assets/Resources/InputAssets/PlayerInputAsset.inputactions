@@ -58,6 +58,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Aiming",
+                    "type": "Value",
+                    "id": "ab9f7442-7f2c-4509-9054-c4599c8e5a77",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -216,7 +225,7 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "Stick",
+                    "name": "LeftStick",
                     "id": "4720eaed-e728-479e-aa6a-7dcc820c04d3",
                     "path": "2DVector(mode=2)",
                     "interactions": "",
@@ -401,6 +410,72 @@
                     "action": "Use",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "RightStick",
+                    "id": "e66cfbb6-add0-4ea5-ab85-bd71cff40485",
+                    "path": "2DVector(mode=2)",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Aiming",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "44c4835e-076d-4a1b-90cf-44dce519c293",
+                    "path": "<Gamepad>/rightStick/up",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayerGamePad",
+                    "action": "Aiming",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "a0a9259d-635c-4e74-b506-c2d3b06352d9",
+                    "path": "<Gamepad>/rightStick/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayerGamePad",
+                    "action": "Aiming",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "1a06e699-4f59-4846-bfb5-5d6de1df21ed",
+                    "path": "<Gamepad>/rightStick/left",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayerGamePad",
+                    "action": "Aiming",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "1b62ae36-adef-44b5-9c76-9447c8d0f0b5",
+                    "path": "<Gamepad>/rightStick/right",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayerGamePad",
+                    "action": "Aiming",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "6f459c4a-6818-45c6-818a-509e695c1bdc",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PlayerKeyBoard",
+                    "action": "Aiming",
+                    "isComposite": false,
+                    "isPartOfComposite": false
                 }
             ]
         },
@@ -440,6 +515,11 @@
             "devices": [
                 {
                     "devicePath": "<Keyboard>",
+                    "isOptional": false,
+                    "isOR": false
+                },
+                {
+                    "devicePath": "<Mouse>",
                     "isOptional": false,
                     "isOR": false
                 }

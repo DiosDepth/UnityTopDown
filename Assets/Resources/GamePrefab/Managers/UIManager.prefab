@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4649365528986290063}
   - component: {fileID: 332411640556853468}
-  - component: {fileID: 114672635167631140}
   m_Layer: 0
   m_Name: UIManager
   m_TagString: Untagged
@@ -45,41 +44,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvasResPath: GamePrefab\GUI\
-  gameStartHudCanvas:
-    prefab: {fileID: 0}
-    prefabName: GameStartCanvas
-    canvas: {fileID: 0}
-  transitionHUDCanvas:
-    prefab: {fileID: 0}
-    prefabName: TransitionCanvas
-    canvas: {fileID: 0}
-  playerHUDCanvas:
-    prefab: {fileID: 0}
-    prefabName: PlayerHUD
-    canvas: {fileID: 0}
-  inGameHUDCanvas:
-    prefab: {fileID: 0}
-    prefabName: InGameHUDCanvas
-    canvas: {fileID: 0}
-  pauseHUDCanvas:
-    prefab: {fileID: 0}
-    prefabName: PauseHUDCanvas
-    canvas: {fileID: 0}
+  canvas: {fileID: 0}
   enemyInfoCanvasList: []
-  uiPoolerHolder: {fileID: 0}
---- !u!114 &114672635167631140
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5174135744563743931}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51b70d3d2213dec4b8e2a4af6ab0e7a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canExpend: 1
-  poolerList: []
-  holderName: 
-  poolerHolderObj: {fileID: 0}

@@ -15,11 +15,11 @@ public abstract class DataInfo
 public class AIDataInfo : DataInfo
 {
     
-    public AIType Type;
+    public AvaliableAI Type;
 
     public string PrefabPath;
     public AIDataInfo() { }
-    public AIDataInfo(int m_id, string m_name, AIType m_type, string m_prefabpath)
+    public AIDataInfo(int m_id, string m_name, AvaliableAI m_type, string m_prefabpath)
     {
         ID = m_id;
         Type = m_type;
@@ -30,7 +30,7 @@ public class AIDataInfo : DataInfo
     public AIDataInfo(string m_id, string m_name, string m_type, string m_prefabpath)
     {
         int.TryParse(m_id, out ID);
-        Type = (AIType)AIType.Parse(typeof(AIType), m_type);
+        Type = (AvaliableAI)AvaliableAI.Parse(typeof(AvaliableAI), m_type);
         Name = m_name;
         PrefabPath = m_prefabpath;
     }
@@ -39,7 +39,7 @@ public class AIDataInfo : DataInfo
     {
         int.TryParse(info[0], out ID);
         Name = info[1];
-        Type = (AIType)AIType.Parse(typeof(AIType), info[2]);
+        Type = (AvaliableAI)AvaliableAI.Parse(typeof(AvaliableAI), info[2]);
         PrefabPath = info[3];
     }
 
@@ -47,7 +47,7 @@ public class AIDataInfo : DataInfo
     {
         int.TryParse(info[0], out ID);
         Name = info[1];
-        Type = (AIType)AIType.Parse(typeof(AIType), info[2]);
+        Type = (AvaliableAI)AvaliableAI.Parse(typeof(AvaliableAI), info[2]);
         PrefabPath = info[3];
     }
 }

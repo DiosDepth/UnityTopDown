@@ -99,8 +99,8 @@ public class TDDataManager : Singleton<TDDataManager>
 
 
     //public Dictionary<CSVDataType, Dictionary<string, Data>> csvDic = new Dictionary<CSVDataType, Dictionary<string, Data>>();
-    public Dictionary<string, WeaponDataInfo> WeaponDataDic = new Dictionary<string, WeaponDataInfo>();
-    public Dictionary<string, AIDataInfo> AIDataDic = new Dictionary<string, AIDataInfo>();
+    private Dictionary<string, WeaponDataInfo> WeaponDataDic = new Dictionary<string, WeaponDataInfo>();
+    private Dictionary<string, AIDataInfo> AIDataDic = new Dictionary<string, AIDataInfo>();
 
     private string _relativePath;
     //private AssetBundle ABData;
@@ -231,6 +231,31 @@ public class TDDataManager : Singleton<TDDataManager>
         yield return null;
     }
 
+    public WeaponDataInfo GetWeaponDataInfo (AvalibleWeapons weapon)
+    {
+        string weaponname = weapon.ToString();
+        if(WeaponDataDic.ContainsKey(weaponname))
+        {
+            return WeaponDataDic[weaponname];
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    public AIDataInfo GetAIDataInfo(AvaliableAI ai)
+    {
+        string ainame = ai.ToString();
+        if (AIDataDic.ContainsKey(ainame))
+        {
+            return AIDataDic[ainame];
+        }
+        else
+        {
+            return null;
+        }
+    }
    /* IEnumerator LoadAIData(FileInfo m_info, Dictionary<string,AIDataInfo> m_dic)
     {
 

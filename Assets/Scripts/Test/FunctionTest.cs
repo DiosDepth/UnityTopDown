@@ -35,7 +35,7 @@ public class FunctionTest : MonoBehaviour
     {
         if(Input.GetMouseButtonDown(0))
         {
-            string path = TDDataManager.instance.AIDataDic["Bear"].PrefabPath;
+            string path = TDDataManager.instance.GetAIDataInfo(TDEnums.AvaliableAI.Bear).PrefabPath;
             TDPoolManager.instance.GetObj(path, true, (obj) => {
                 gameObj = obj;
                 obj.transform.SetPositionAndRotation(temp_TRS.position, temp_TRS.rotation);

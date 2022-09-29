@@ -80,6 +80,15 @@ public partial class @PlayerInputAsset : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Aiming"",
+                    ""type"": ""Value"",
+                    ""id"": ""ab9f7442-7f2c-4509-9054-c4599c8e5a77"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -238,7 +247,7 @@ public partial class @PlayerInputAsset : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""Stick"",
+                    ""name"": ""LeftStick"",
                     ""id"": ""4720eaed-e728-479e-aa6a-7dcc820c04d3"",
                     ""path"": ""2DVector(mode=2)"",
                     ""interactions"": """",
@@ -423,6 +432,72 @@ public partial class @PlayerInputAsset : IInputActionCollection2, IDisposable
                     ""action"": ""Use"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""RightStick"",
+                    ""id"": ""e66cfbb6-add0-4ea5-ab85-bd71cff40485"",
+                    ""path"": ""2DVector(mode=2)"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Aiming"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""44c4835e-076d-4a1b-90cf-44dce519c293"",
+                    ""path"": ""<Gamepad>/rightStick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PlayerGamePad"",
+                    ""action"": ""Aiming"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""a0a9259d-635c-4e74-b506-c2d3b06352d9"",
+                    ""path"": ""<Gamepad>/rightStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PlayerGamePad"",
+                    ""action"": ""Aiming"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""1a06e699-4f59-4846-bfb5-5d6de1df21ed"",
+                    ""path"": ""<Gamepad>/rightStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PlayerGamePad"",
+                    ""action"": ""Aiming"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""1b62ae36-adef-44b5-9c76-9447c8d0f0b5"",
+                    ""path"": ""<Gamepad>/rightStick/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PlayerGamePad"",
+                    ""action"": ""Aiming"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6f459c4a-6818-45c6-818a-509e695c1bdc"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PlayerKeyBoard"",
+                    ""action"": ""Aiming"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -464,6 +539,11 @@ public partial class @PlayerInputAsset : IInputActionCollection2, IDisposable
                     ""devicePath"": ""<Keyboard>"",
                     ""isOptional"": false,
                     ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<Mouse>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
                 }
             ]
         },
@@ -488,6 +568,7 @@ public partial class @PlayerInputAsset : IInputActionCollection2, IDisposable
         m_Gameplay_Interacte = m_Gameplay.FindAction("Interacte", throwIfNotFound: true);
         m_Gameplay_PauseGame = m_Gameplay.FindAction("PauseGame", throwIfNotFound: true);
         m_Gameplay_Use = m_Gameplay.FindAction("Use", throwIfNotFound: true);
+        m_Gameplay_Aiming = m_Gameplay.FindAction("Aiming", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Newaction = m_UI.FindAction("New action", throwIfNotFound: true);
@@ -556,6 +637,7 @@ public partial class @PlayerInputAsset : IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Interacte;
     private readonly InputAction m_Gameplay_PauseGame;
     private readonly InputAction m_Gameplay_Use;
+    private readonly InputAction m_Gameplay_Aiming;
     public struct GameplayActions
     {
         private @PlayerInputAsset m_Wrapper;
@@ -566,6 +648,7 @@ public partial class @PlayerInputAsset : IInputActionCollection2, IDisposable
         public InputAction @Interacte => m_Wrapper.m_Gameplay_Interacte;
         public InputAction @PauseGame => m_Wrapper.m_Gameplay_PauseGame;
         public InputAction @Use => m_Wrapper.m_Gameplay_Use;
+        public InputAction @Aiming => m_Wrapper.m_Gameplay_Aiming;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -593,6 +676,9 @@ public partial class @PlayerInputAsset : IInputActionCollection2, IDisposable
                 @Use.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnUse;
                 @Use.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnUse;
                 @Use.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnUse;
+                @Aiming.started -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAiming;
+                @Aiming.performed -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAiming;
+                @Aiming.canceled -= m_Wrapper.m_GameplayActionsCallbackInterface.OnAiming;
             }
             m_Wrapper.m_GameplayActionsCallbackInterface = instance;
             if (instance != null)
@@ -615,6 +701,9 @@ public partial class @PlayerInputAsset : IInputActionCollection2, IDisposable
                 @Use.started += instance.OnUse;
                 @Use.performed += instance.OnUse;
                 @Use.canceled += instance.OnUse;
+                @Aiming.started += instance.OnAiming;
+                @Aiming.performed += instance.OnAiming;
+                @Aiming.canceled += instance.OnAiming;
             }
         }
     }
@@ -678,6 +767,7 @@ public partial class @PlayerInputAsset : IInputActionCollection2, IDisposable
         void OnInteracte(InputAction.CallbackContext context);
         void OnPauseGame(InputAction.CallbackContext context);
         void OnUse(InputAction.CallbackContext context);
+        void OnAiming(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

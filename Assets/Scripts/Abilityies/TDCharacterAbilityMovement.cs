@@ -86,7 +86,16 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
         base.InitialAbility();
         _tdCharacterController = GetComponent<TDCharacterController>();
         movementForbiden = false;
-        InputSystemManager.instance.Gameplay_InputAction_Movement += HandleInput;
+        switch (owner.characterType)
+        {
+            case TDEnums.CharacterType.Player:
+                InputSystemManager.instance.Gameplay_InputAction_Movement += HandleInput;
+                break;
+            case TDEnums.CharacterType.AI:
+                break;
+        }
+
+       
     }
 
     public void HandleMovement(InputAction.CallbackContext callbackContext)

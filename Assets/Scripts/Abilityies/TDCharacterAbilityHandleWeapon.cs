@@ -23,10 +23,14 @@ namespace TDEnums
 public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
 {
     public Transform mainweaponSlot;
-    public TDWeapon InitialWeapon;
+    public Transform mainWeaponRoot;
+    public AvalibleWeapons InitialWeapon;
     public TDWeapon currentMainWeapon;
     public TDWeapon currentSecondWeapon;
     public TDStateMachine<HandleWeaponState> handleState;
+
+    private Vector3 _aimingDirection;
+    
 
    
     // Start is called before the first frame update
@@ -56,29 +60,41 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
             return;
         }
 
-        if(InitialWeapon == null)
+        if(InitialWeapon == AvalibleWeapons.None)
         {
             if(isShowDebug)
             {
-                Debug.Log("TDCharacterAbilityHandleWeapon : " + "can't find InitialWeapon in this object");
+                Debug.LogWarning("TDCharacterAbilityHandleWeapon : " + "InitialWeapon set to none");
             }
             return;
         }
-        else
+        
+        if (currentMainWeapon == null)
         {
-            currentMainWeapon = InitialWeapon;
+            string temppath = TDDataManager.instance.GetWeaponDataInfo(InitialWeapon).PrefabPath;
+            TDDataManager.instance.LoadResAsync<GameObject>(temppath, (obj) =>
+            {
+                obj.transform.parent = mainweaponSlot;
+                obj.transform.localPosition = Vector3.zero;
+                currentMainWeapon = obj.GetComponent<TDWeapon>();
+                //Instantiate(obj, mainweaponSlot);
+                currentMainWeapon.SetOwner(owner);
+                currentMainWeapon.Initialization();
+                //Assin weapon animator to TDcharacter 
+                BindAnimator();
+                currentMainWeapon.WeaponON();
+                handleState = new TDStateMachine<HandleWeaponState>(this.gameObject);
+                if (handleState.currentState != HandleWeaponState.Waitting)
+                {
+                    handleState.ChangeState(HandleWeaponState.Waitting);
+                }
+            }
+            );
         }
-        currentMainWeapon.SetOwner(owner);
-        currentMainWeapon.Initialization();
-        //Assin weapon animator to TDcharacter 
-        BindAnimator();
-        currentMainWeapon.WeaponON();
-        handleState = new TDStateMachine<HandleWeaponState>(this.gameObject);
-        if (handleState.currentState != HandleWeaponState.Waitting)
-        {
-            handleState.ChangeState(HandleWeaponState.Waitting);
-        }
+        
+
         InputSystemManager.instance.Gameplay_InputAction_Attack += HandleInput;
+
     }
     public override void HandleInput(InputAction.CallbackContext callbackContext)
     {
@@ -135,6 +151,15 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
         }
     }
 
+    public void HandleAimingInput(InputAction.CallbackContext callbackContext)
+    {
+        if(owner.characterType == CharacterType.Player)
+        {
+
+        }
+    }
+
+ 
 
     public override void UpdateAbility()
     {
@@ -246,6 +271,15 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
         Debug.Log("TDCharacterAbilityHandleWeapon : " + "WeaponAttackEnd!");
     }
 
+    public virtual void Aming()
+    {
+        if(currentMainWeapon == null)
+        {
+            return;
+        }
+        
+    }
+
     protected override void InitializeAnimatorParameters()
     {
 
@@ -258,5 +292,11 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
     private void UpdateWeaponSlotDirection()
     {
         mainweaponSlot.forward = owner.characterModleContainer.forward;
+    }
+    public override void OnRemove()
+    {
+        base.OnRemove();
+        InputSystemManager.instance.Gameplay_InputAction_Attack -= HandleInput;
+        InputSystemManager.instance.GamePlay_InputAction_Aiming -= HandleAimingInput;
     }
 }

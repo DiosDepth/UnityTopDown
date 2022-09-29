@@ -14,6 +14,7 @@ public class InputSystemManager : Singleton<InputSystemManager>
     public UnityAction<InputAction.CallbackContext> Gameplay_InputAction_Interaction;
     public UnityAction<InputAction.CallbackContext> Gameplay_InputAction_Use;
     public UnityAction<InputAction.CallbackContext> Gameplay_InputAction_Pause;
+    public UnityAction<InputAction.CallbackContext> GamePlay_InputAction_Aiming;
 
     public UnityAction<InputAction.CallbackContext> UI_InputAction_Move;
     public UnityAction<InputAction.CallbackContext> UI_InputAction_Submit;
@@ -89,5 +90,13 @@ public class InputSystemManager : Singleton<InputSystemManager>
         if (Gameplay_InputAction_Pause == null) { return; }
         Gameplay_InputAction_Pause.Invoke(callbackContext);
         Debug.Log("InputSystemManager Call-End  InputActionFunction_Pause -> " + callbackContext.action.name);
+    }
+
+    public void InputActionFunction_Aiming(InputAction.CallbackContext callbackContext)
+    {
+        Debug.Log("InputSystemManager Call-Start InputActionFunction_Aiming -> " + callbackContext.action.name);
+        if (GamePlay_InputAction_Aiming == null) { return; }
+        GamePlay_InputAction_Aiming.Invoke(callbackContext);
+        Debug.Log("InputSystemManager Call-End  InputActionFunction_Aiming -> " + callbackContext.action.name);
     }
 }

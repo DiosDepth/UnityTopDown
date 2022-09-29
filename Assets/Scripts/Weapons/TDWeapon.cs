@@ -8,6 +8,7 @@ namespace TDEnums
 {
     public enum AimType
     {
+        None,
         TargetBase,
         DirectionBase,
     }
@@ -24,6 +25,13 @@ namespace TDEnums
         SG,
         SMG,
         AR,
+    }
+
+    public enum AvalibleWeapons
+    {
+        None,
+        Sword,
+        ShotGun,
     }
     public enum WeaponStates
     {
@@ -150,27 +158,31 @@ public class TDWeapon : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(isUpdate)
+        if (isUpdate)
         {
-            UpdateAnimators();
+            ProcessWeaponState();
+            state = weaponStates.currentState;
+
         }
 
     }
 
     private void LateUpdate()
     {
-        if(isUpdate)
-        {
-            ProcessWeaponState();
-            state = weaponStates.currentState;
-        }
 
+        if (isUpdate)
+        {
+            if(weaponAnimator != null)
+            {
+                UpdateAnimators();
+            }
+        }
     }
 
     public virtual void Initialization()
     {
         //base.Initialization();
-        weaponAnimator = GetComponent<Animator>();
+        weaponAnimator = GetComponentInChildren<Animator>();
         _movement = owner.transform.GetComponent<TDCharacterAbilityMovement>();
         _weaponHandler = owner.transform.GetComponent<TDCharacterAbilityHandleWeapon>();
         weaponStates = new TDStateMachine<WeaponStates>(this.gameObject);
@@ -178,6 +190,7 @@ public class TDWeapon : MonoBehaviour
         weaponStates.ChangeState(WeaponStates.WeaponIdle);
 
     }
+
 
     public virtual void CreateDamageArea()
     {
@@ -370,6 +383,11 @@ public class TDWeapon : MonoBehaviour
     public virtual void FireRequest()
     {
         weaponStates.ChangeState(WeaponStates.WeaponUse);
+    }
+
+    public virtual void ProcessAiming()
+    {
+
     }
 
     public virtual void ProjectileWeaponFire()

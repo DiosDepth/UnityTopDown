@@ -14,7 +14,7 @@ namespace TDEnums
         SinglePoint,
     }
 
-    public enum AIType
+    public enum AvaliableAI
     {
         None,
         Bear,
@@ -40,7 +40,7 @@ public struct WaveInfo
 [System.Serializable]
 public struct AISpawnInfo
 {
-    public AIType AIType;
+    public AvaliableAI avaliableAI;
     public string name;
     public int count;
     public float minSpawnDelay;
@@ -48,9 +48,9 @@ public struct AISpawnInfo
     public Transform[] spawnPoints;
     public AISpawnMode spawnMode;
 
-    public AISpawnInfo(AIType m_AIType = AIType.None, string m_name = "", int m_count = 0, float m_minSpawnDelay = 0, float m_maxSpawnDelay = 3, int m_spawnpointcount = 1,AISpawnMode m_spawnmode = AISpawnMode.SinglePoint)
+    public AISpawnInfo(AvaliableAI m_avaliableAI = AvaliableAI.None, string m_name = "", int m_count = 0, float m_minSpawnDelay = 0, float m_maxSpawnDelay = 3, int m_spawnpointcount = 1,AISpawnMode m_spawnmode = AISpawnMode.SinglePoint)
     {
-        AIType = m_AIType;
+        avaliableAI = m_avaliableAI;
         name = m_name;
         count = m_count;
         minSpawnDelay = m_minSpawnDelay;
@@ -302,7 +302,7 @@ public class AIFactory : GameObjectFactory
 
     protected void Spawn(AISpawnInfo m_spawninfo,bool m_isactive,UnityAction<GameObject> callback)
     {
-        string path = TDDataManager.instance.AIDataDic[m_spawninfo.name].PrefabPath;
+        string path = TDDataManager.instance.GetAIDataInfo(m_spawninfo.avaliableAI).PrefabPath;
         TDPoolManager.instance.GetObj(path, m_isactive, callback);
 
     }
