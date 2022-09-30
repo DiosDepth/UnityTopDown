@@ -8,6 +8,10 @@ public class InputSystemMouseTest : MonoBehaviour
     // Start is called before the first frame update
     public Vector2 mousePos;
     public PlayerInput playerinput;
+    public Vector3 mousePoing;
+    Ray cameraray;
+    public RaycastHit hit;
+    public LayerMask mask = 0;
     void Start()
     {
         playerinput = GetComponent<PlayerInput>();
@@ -17,12 +21,27 @@ public class InputSystemMouseTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        mousePos = playerinput.actions.FindActionMap("GamePlay").FindAction("Aiming").ReadValue<Vector2>();
-        Debug.Log("mouse pos : " + mousePos);
+        Debug.Log("Ray origin = " + cameraray.origin +  "  |   Ray dir = " + cameraray.direction);
+        Debug.DrawLine(cameraray.origin, cameraray.origin + cameraray.direction * 100, Color.green);
+
     }
 
     public void HandleInput(InputAction.CallbackContext callbackContext)
     {
-       Debug.Log("Aiming event call : " + callbackContext.ReadValue<Vector2>());
+        cameraray = Camera.main.ScreenPointToRay(callbackContext.ReadValue<Vector2>());
+        mousePoing = Camera.main.ScreenToWorldPoint(callbackContext.ReadValue<Vector2>());
+        mousePoing.z = 0;
+     /*   if(Physics.Raycast(cameraray, out hit, 100f, mask))
+        {
+            Debug.Log("Hit Point = " + hit.point);
+        }*/
+     //Debug.Log("Aiming event call : " + callbackContext.ReadValue<Vector2>());
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(mousePoing, 1f);
+    }
+
 }

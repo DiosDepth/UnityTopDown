@@ -305,7 +305,8 @@ MonoBehaviour:
   owner: {fileID: 0}
   animator: {fileID: 0}
   isShowDebug: 0
-  mainweaponSlot: {fileID: 0}
+  mainWeaponSlot: {fileID: 0}
+  mainWeaponRoot: {fileID: 0}
   InitialWeapon: 2
   currentMainWeapon: {fileID: 0}
   currentSecondWeapon: {fileID: 0}

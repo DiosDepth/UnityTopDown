@@ -5,6 +5,16 @@ using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using TDEnums;
 
+
+namespace InputSpace
+{
+    public enum inputControlSchemeType
+    {
+        PlayerKeyBoard,
+        PlayerGamePad,
+    }
+
+}
 public class InputSystemManager : Singleton<InputSystemManager>
 {
     public bool isTestMode;

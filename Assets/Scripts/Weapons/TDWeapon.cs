@@ -24,7 +24,7 @@ namespace TDEnums
         HG,
         SG,
         SMG,
-        AR,
+        SR,
     }
 
     public enum AvalibleWeapons
@@ -116,8 +116,10 @@ public class TDWeapon : MonoBehaviour
 
     [Header("Projectile Weapon Damage Settings")]
     public WeaponShottingType shottingType = WeaponShottingType.SG;
+    public GameObject bulletObj;
     public float totalDamage = 20;
     public int bulletCount = 3;
+    
     
 
     [Header("WeaponAttribute")]
@@ -133,7 +135,9 @@ public class TDWeapon : MonoBehaviour
     [Header("Animation")]
     public Animator weaponAnimator;
     public List<string> weaponAnimatorParameters;
+
     [Header("Animation Parameters Names")]
+    //todo change string to animation info
     public string IdleAnimationParameter;
     public string StartAnimationParameter;
     public string ChargingStartAnimationParameter;
@@ -315,7 +319,8 @@ public class TDWeapon : MonoBehaviour
 
 
     protected virtual void CaseWeaponFire()
-    {/* switch(weaponType)
+    {
+        switch (weaponType)
         {
             case WeaponType.Projectile:
                 ProjectileWeaponFire();
@@ -323,8 +328,10 @@ public class TDWeapon : MonoBehaviour
             case WeaponType.Melee:
                 StartCoroutine(MeleeWeaoponFire());
                 break;
-        }*/
-        StartCoroutine(MeleeWeaoponFire());
+            case WeaponType.Instante:
+                break;
+        }
+
 
 
     }
@@ -385,23 +392,23 @@ public class TDWeapon : MonoBehaviour
         weaponStates.ChangeState(WeaponStates.WeaponUse);
     }
 
-    public virtual void ProcessAiming()
-    {
 
-    }
 
     public virtual void ProjectileWeaponFire()
     {
+
+        _timeBetweenFireCounter = timeBetweenFire;
         //todo player VFX
         //todo play SFX
         //todo shootProjectile
-        _timeBetweenFireCounter = timeBetweenFire;
+
+
         weaponStates.ChangeState(WeaponStates.WeaponDelayBetweenUses);
     }
 
-    public IEnumerator MeleeWeaoponFire()
+    public virtual IEnumerator MeleeWeaoponFire()
     {
-        if(_isMeleeAttacking)
+        if(!_isMeleeAttacking)
         {
            yield break;
         }
@@ -421,6 +428,8 @@ public class TDWeapon : MonoBehaviour
 
 
     }
+
+
     //initialize weapon animator parameters
     protected virtual void InitializeAnimatorParameters()
     {

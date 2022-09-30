@@ -10,7 +10,7 @@ public static class ExtensionMathTools
 /// <param name="m_trs"></param>
 /// <param name="m_forward"></param>
 /// <param name="m_rotSpeed"></param>
-    public static void ApplyRotationWithDirection(Transform m_trs, Vector3 m_forward,Vector3 m_up, float m_rotSpeed)
+    public static void ApplyRotationWithDirectionXY(Transform m_trs, Vector3 m_forward, float m_rotSpeed)
     {
         Transform tempTrs;
         if (m_trs == null)
@@ -21,8 +21,13 @@ public static class ExtensionMathTools
         {
             tempTrs = m_trs;
         }
-        Quaternion lookRot = Quaternion.LookRotation(m_forward, m_up);
-        m_trs.rotation = Quaternion.RotateTowards(m_trs.rotation, lookRot, m_rotSpeed * Time.fixedDeltaTime);
-    }
+        Quaternion rot = Quaternion.FromToRotation(Vector3.right, m_forward);
 
+        m_trs.rotation = Quaternion.RotateTowards(m_trs.rotation, rot, m_rotSpeed * Time.deltaTime);
+    }
+    public static List<float> DivideAngleByCount(Vector3 m_dir, float m_angle, int m_dividecount )
+    {
+        List<float> templist = new List<float>();
+        return templist;
+    }
 }

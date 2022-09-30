@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TDEnums;
+using InputSpace;
 
 
 namespace TDEnums
@@ -22,15 +23,15 @@ namespace TDEnums
 [RequireComponent(typeof(TDCharacter))]
 public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
 {
-    public Transform mainweaponSlot;
+    public Transform mainWeaponSlot;
     public Transform mainWeaponRoot;
     public AvalibleWeapons InitialWeapon;
     public TDWeapon currentMainWeapon;
     public TDWeapon currentSecondWeapon;
     public TDStateMachine<HandleWeaponState> handleState;
 
-    private Vector3 _aimingDirection;
-    
+    public Vector3 _aimingDirection;
+
 
    
     // Start is called before the first frame update
@@ -49,8 +50,9 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
     {
         owner = this.GetComponent<TDCharacter>();
         
-        mainweaponSlot = this.gameObject.transform.Find("WeaponSlot");
-        if (mainweaponSlot == null)
+        mainWeaponSlot = this.gameObject.transform.Find("WeaponSlot");
+        
+        if (mainWeaponSlot == null)
         {
             if (isShowDebug)
             {
@@ -59,8 +61,9 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
 
             return;
         }
+        
 
-        if(InitialWeapon == AvalibleWeapons.None)
+        if (InitialWeapon == AvalibleWeapons.None)
         {
             if(isShowDebug)
             {
@@ -74,7 +77,8 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
             string temppath = TDDataManager.instance.GetWeaponDataInfo(InitialWeapon).PrefabPath;
             TDDataManager.instance.LoadResAsync<GameObject>(temppath, (obj) =>
             {
-                obj.transform.parent = mainweaponSlot;
+                obj.transform.parent = mainWeaponSlot;
+                mainWeaponRoot = obj.transform;
                 obj.transform.localPosition = Vector3.zero;
                 currentMainWeapon = obj.GetComponent<TDWeapon>();
                 //Instantiate(obj, mainweaponSlot);
@@ -94,6 +98,7 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
         
 
         InputSystemManager.instance.Gameplay_InputAction_Attack += HandleInput;
+        InputSystemManager.instance.GamePlay_InputAction_Aiming += HandleAimingInput;
 
     }
     public override void HandleInput(InputAction.CallbackContext callbackContext)
@@ -153,19 +158,44 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
 
     public void HandleAimingInput(InputAction.CallbackContext callbackContext)
     {
-        if(owner.characterType == CharacterType.Player)
+        if(owner.characterType != CharacterType.Player)
         {
+            return;
+        }
+       if (InputSystemManager.instance.playerInput.currentControlScheme == inputControlSchemeType.PlayerKeyBoard.ToString())
+        {
+  
+            _aimingDirection = TDCameraManager.instance.currentActiveCamera.ScreenToWorldPoint(callbackContext.ReadValue<Vector2>());
+            _aimingDirection = new Vector3(_aimingDirection.x - mainWeaponRoot.position.x, _aimingDirection.y - mainWeaponRoot.position.y, 0);
+            _aimingDirection = _aimingDirection.normalized;
 
+
+        }
+       if(InputSystemManager.instance.playerInput.currentControlScheme == inputControlSchemeType.PlayerGamePad.ToString())
+        {
+            _aimingDirection = callbackContext.ReadValue<Vector2>();
+            _aimingDirection.z = 0;
+            _aimingDirection = _aimingDirection.normalized;
         }
     }
 
- 
+    public override void EarlyUpdateAbility()
+    {
+        base.EarlyUpdateAbility();
+        Aiming();
+        
+    }
 
     public override void UpdateAbility()
     {
         base.UpdateAbility();
         //处理武器的蓄力攻击
-        if (handleState.currentState == HandleWeaponState.Charging)
+        if(handleState == null)
+        {
+            Debug.LogWarning("handleState is null, please initial weapon before using");
+            return;
+        }
+        if (handleState?.currentState == HandleWeaponState.Charging)
         {
                 if (Time.time - currentMainWeapon.ChargeTimeStamp >= currentMainWeapon.CompletedChargeTime)
                 {
@@ -233,7 +263,7 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
         {
             return;
         }
-        UpdateWeaponSlotDirection();
+      
         owner.GetComponent<TDCharacter>().movementState.ChangeState(TDEnums.CharacterStates.MovementStates.Attack);
         Debug.Log("TDCharacterAbilityHandleWeapon : " + "WeaponFire!");
         currentMainWeapon.WeaponInputStart();
@@ -251,7 +281,7 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
         {
             return;
         }
-        UpdateWeaponSlotDirection();
+    
         owner.GetComponent<TDCharacter>().movementState.ChangeState(TDEnums.CharacterStates.MovementStates.ChargeingAttack);
         Debug.Log("TDCharacterAbilityHandleWeapon : " + "WeaponChargeFire!");
         currentMainWeapon.WeaponInputStart();
@@ -271,12 +301,14 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
         Debug.Log("TDCharacterAbilityHandleWeapon : " + "WeaponAttackEnd!");
     }
 
-    public virtual void Aming()
+    public virtual void Aiming()
     {
         if(currentMainWeapon == null)
         {
             return;
         }
+        Debug.DrawLine(mainWeaponRoot.position, mainWeaponRoot.position+_aimingDirection*5f , Color.green, 0.1f);
+        ExtensionMathTools.ApplyRotationWithDirectionXY(mainWeaponRoot, _aimingDirection, 720);
         
     }
 
@@ -291,7 +323,7 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
 
     private void UpdateWeaponSlotDirection()
     {
-        mainweaponSlot.forward = owner.characterModleContainer.forward;
+        
     }
     public override void OnRemove()
     {
