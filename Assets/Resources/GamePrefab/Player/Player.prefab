@@ -193,10 +193,10 @@ MonoBehaviour:
   cdTime: 0
   isFixedUpdate: 1
   isSkill: 0
-  uniqueSkillName: 
   isAbilityOn: 1
   owner: {fileID: 0}
   animator: {fileID: 0}
+  uniqueSkillName: 
   isShowDebug: 0
   movementType: 1
   maxMoveSpeed: 7
@@ -231,10 +231,10 @@ MonoBehaviour:
   cdTime: 0
   isFixedUpdate: 0
   isSkill: 0
-  uniqueSkillName: 
   isAbilityOn: 1
   owner: {fileID: 0}
   animator: {fileID: 0}
+  uniqueSkillName: LevelPause
   isShowDebug: 0
 --- !u!114 &114806171496760620
 MonoBehaviour:
@@ -252,10 +252,10 @@ MonoBehaviour:
   cdTime: 0
   isFixedUpdate: 0
   isSkill: 0
-  uniqueSkillName: 
   isAbilityOn: 1
   owner: {fileID: 0}
   animator: {fileID: 0}
+  uniqueSkillName: PickUp
   isShowDebug: 0
   currentPicker: {fileID: 0}
 --- !u!114 &114038171270093922
@@ -274,10 +274,10 @@ MonoBehaviour:
   cdTime: 0
   isFixedUpdate: 0
   isSkill: 0
-  uniqueSkillName: 
   isAbilityOn: 1
   owner: {fileID: 0}
   animator: {fileID: 0}
+  uniqueSkillName: Health
   isShowDebug: 0
   currentHP: 0
   lastCaster: {fileID: 0}
@@ -300,10 +300,10 @@ MonoBehaviour:
   cdTime: 0
   isFixedUpdate: 0
   isSkill: 0
-  uniqueSkillName: 
   isAbilityOn: 1
   owner: {fileID: 0}
   animator: {fileID: 0}
+  uniqueSkillName: HandleWeapon
   isShowDebug: 0
   mainWeaponSlot: {fileID: 0}
   mainWeaponRoot: {fileID: 0}
@@ -326,10 +326,10 @@ MonoBehaviour:
   cdTime: 0
   isFixedUpdate: 0
   isSkill: 0
-  uniqueSkillName: 
   isAbilityOn: 1
   owner: {fileID: 0}
   animator: {fileID: 0}
+  uniqueSkillName: HandleInventory
   isShowDebug: 0
 --- !u!50 &1122693505232180009
 Rigidbody2D:

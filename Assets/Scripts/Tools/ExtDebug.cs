@@ -109,4 +109,10 @@ public static class ExtDebug
         Vector3 direction = point - pivot;
         return pivot + rotation * direction;
     }
+
+    public static void ShowDebugLog(object m_message, bool m_isshow = true )
+    {
+        if (m_isshow)
+            Debug.Log(m_message);
+    }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using TDEnums;
+using WeaponNameSpace;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;

@@ -85,9 +85,20 @@
                     "name": "",
                     "id": "8ad2ff5b-9ead-4245-8f9c-e66ad11ad327",
                     "path": "<Gamepad>/buttonWest",
-                    "interactions": "",
+                    "interactions": "Hold",
                     "processors": "",
                     "groups": "PlayerGamePad",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a49f2485-35e6-4807-ae38-abca09e16c7c",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "PlayerKeyBoard",
                     "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false

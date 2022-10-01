@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using TDEnums;
+using WeaponNameSpace;
 using InputSpace;
 
 
-namespace TDEnums
+namespace WeaponNameSpace
 {
     public enum HandleWeaponState
     {
@@ -23,14 +24,16 @@ namespace TDEnums
 [RequireComponent(typeof(TDCharacter))]
 public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
 {
+    
     public Transform mainWeaponSlot;
     public Transform mainWeaponRoot;
     public AvalibleWeapons InitialWeapon;
     public TDWeapon currentMainWeapon;
     public TDWeapon currentSecondWeapon;
     public TDStateMachine<HandleWeaponState> handleState;
+    public Vector3 aimingDirection;
 
-    public Vector3 _aimingDirection;
+
 
 
    
@@ -87,6 +90,8 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
                 //Assin weapon animator to TDcharacter 
                 BindAnimator();
                 currentMainWeapon.WeaponON();
+                InputSystemManager.instance.Gameplay_InputAction_Attack += HandleInput;
+                InputSystemManager.instance.GamePlay_InputAction_Aiming += HandleAimingInput;
                 handleState = new TDStateMachine<HandleWeaponState>(this.gameObject);
                 if (handleState.currentState != HandleWeaponState.Waitting)
                 {
@@ -97,8 +102,7 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
         }
         
 
-        InputSystemManager.instance.Gameplay_InputAction_Attack += HandleInput;
-        InputSystemManager.instance.GamePlay_InputAction_Aiming += HandleAimingInput;
+ 
 
     }
     public override void HandleInput(InputAction.CallbackContext callbackContext)
@@ -162,21 +166,22 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
         {
             return;
         }
-       if (InputSystemManager.instance.playerInput.currentControlScheme == inputControlSchemeType.PlayerKeyBoard.ToString())
-        {
-  
-            _aimingDirection = TDCameraManager.instance.currentActiveCamera.ScreenToWorldPoint(callbackContext.ReadValue<Vector2>());
-            _aimingDirection = new Vector3(_aimingDirection.x - mainWeaponRoot.position.x, _aimingDirection.y - mainWeaponRoot.position.y, 0);
-            _aimingDirection = _aimingDirection.normalized;
+        if (InputSystemManager.instance.playerInput.currentControlScheme == inputControlSchemeType.PlayerKeyBoard.ToString())
+          {
+
+              aimingDirection = TDCameraManager.instance.currentActiveCamera.ScreenToWorldPoint(callbackContext.ReadValue<Vector2>());
+              aimingDirection = new Vector3(aimingDirection.x - mainWeaponRoot.position.x, aimingDirection.y - mainWeaponRoot.position.y, 0);
+              aimingDirection = aimingDirection.normalized;
 
 
-        }
-       if(InputSystemManager.instance.playerInput.currentControlScheme == inputControlSchemeType.PlayerGamePad.ToString())
-        {
-            _aimingDirection = callbackContext.ReadValue<Vector2>();
-            _aimingDirection.z = 0;
-            _aimingDirection = _aimingDirection.normalized;
-        }
+          }
+
+        if (InputSystemManager.instance.playerInput.currentControlScheme == inputControlSchemeType.PlayerGamePad.ToString())
+            {
+                aimingDirection = callbackContext.ReadValue<Vector2>();
+                aimingDirection.z = 0;
+                aimingDirection = aimingDirection.normalized;
+            }
     }
 
     public override void EarlyUpdateAbility()
@@ -228,7 +233,7 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
             || owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Attack
             || owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Chargeing
             || owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Dash
-            || currentMainWeapon.weaponStates.currentState != TDEnums.WeaponStates.WeaponIdle)
+            || currentMainWeapon.weaponStates.currentState != WeaponNameSpace.WeaponStates.WeaponIdle)
         {
             return;
         }
@@ -259,7 +264,7 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
             || owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Attack
             || owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Charged
             || owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Dash
-            || currentMainWeapon.weaponStates.currentState != TDEnums.WeaponStates.WeaponIdle)
+            || currentMainWeapon.weaponStates.currentState != WeaponNameSpace.WeaponStates.WeaponIdle)
         {
             return;
         }
@@ -277,7 +282,7 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
             || owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Attack
             || owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Chargeing
             || owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Dash
-            || currentMainWeapon.weaponStates.currentState != TDEnums.WeaponStates.WeaponIdle)
+            || currentMainWeapon.weaponStates.currentState != WeaponNameSpace.WeaponStates.WeaponIdle)
         {
             return;
         }
@@ -307,8 +312,8 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
         {
             return;
         }
-        Debug.DrawLine(mainWeaponRoot.position, mainWeaponRoot.position+_aimingDirection*5f , Color.green, 0.1f);
-        ExtensionMathTools.ApplyRotationWithDirectionXY(mainWeaponRoot, _aimingDirection, 720);
+        Debug.DrawLine(mainWeaponRoot.position, mainWeaponRoot.position+aimingDirection*5f , Color.green, 0.1f);
+        ExtensionMathTools.ApplyRotationWithDirectionXY(mainWeaponRoot, aimingDirection, 720);
         
     }
 

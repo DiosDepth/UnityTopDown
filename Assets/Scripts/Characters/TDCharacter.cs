@@ -53,6 +53,7 @@ public class TDCharacter : MonoBehaviour
 
     [SerializeField]
     public TDCharacterAbility[] abilityLists;
+    public Dictionary<string, int> abilityDic = new Dictionary<string, int>();
     public TDCharacterController controller;
     [SerializeField]
     public TDCharacterAttribute attribute;
@@ -78,6 +79,11 @@ public class TDCharacter : MonoBehaviour
     {
         controller = GetComponent<TDCharacterController>();
         abilityLists = GetComponents<TDCharacterAbility>();
+
+        for (int i = 0; i < abilityLists.Length -1 ; i++)
+        {
+            abilityDic.Add(abilityLists[i].uniqueSkillName, i);
+        }
         abilityCount = abilityLists.Length;
         isUpdateAbility = false;
         movementState = new TDStateMachine<CharacterStates.MovementStates>(this.gameObject);
@@ -91,6 +97,12 @@ public class TDCharacter : MonoBehaviour
         //Debug.Log("ConditionState : " + conditionState.currentState);
     }
 
+
+    public virtual TDCharacterAbility GetAbilityByUniqueSkillName(string m_skillname)
+    {
+        int index = abilityDic[m_skillname];
+        return abilityLists[index];
+    }
 
     public virtual void AssignCharacterAnimator()
     {

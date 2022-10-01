@@ -28,11 +28,13 @@ public class TDCharacterAbility : MonoBehaviour
     /// <summary>
     /// unique skill name to define what skill is, it must be unique
     /// </summary>
-    public string uniqueSkillName;
+    
 
     public bool isAbilityOn = true;
     public TDCharacter owner;
     public Animator animator;
+    [SerializeField]
+    public string uniqueSkillName;
 
     public bool isShowDebug = false;
 

@@ -2,9 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using TDEnums;
+using WeaponNameSpace;
 
-namespace TDEnums
+namespace WeaponNameSpace
 {
     public enum AimType
     {
@@ -53,6 +53,11 @@ namespace TDEnums
         EndDamage
     }
 
+    //make enum same as Projectiles in Resources\GamePrefab\Weapons\Projectiles\
+    public enum AvalibleProjectile
+    {
+        PistolBullet,
+    }
 }
 
 public struct TDWeaponDamageEvent
@@ -84,6 +89,8 @@ public class TDWeapon : MonoBehaviour
     public TDStateMachine<WeaponStates> weaponStates;
     public WeaponType weaponType = WeaponType.Melee;
     public AimType aimType = AimType.TargetBase;
+    public string bulletPrefabPath = @"GamePrefab\Weapons\Projectiles\";
+
 
     public float timeBetweenFire = 1;
     public float timeBeforeFire = 0;
@@ -116,9 +123,11 @@ public class TDWeapon : MonoBehaviour
 
     [Header("Projectile Weapon Damage Settings")]
     public WeaponShottingType shottingType = WeaponShottingType.SG;
-    public GameObject bulletObj;
+    public AvalibleProjectile bullet = AvalibleProjectile.PistolBullet;
+    public Transform firePoint;
     public float totalDamage = 20;
     public int bulletCount = 3;
+
     
     
 
@@ -329,6 +338,7 @@ public class TDWeapon : MonoBehaviour
                 StartCoroutine(MeleeWeaoponFire());
                 break;
             case WeaponType.Instante:
+
                 break;
         }
 
@@ -400,8 +410,16 @@ public class TDWeapon : MonoBehaviour
         _timeBetweenFireCounter = timeBetweenFire;
         //todo player VFX
         //todo play SFX
-        //todo shootProjectile
-
+    
+        TDPoolManager.instance.GetObj(bulletPrefabPath + bullet.ToString(), true, (obj) => 
+        {
+            StraightLineProjectile prjc = obj.GetComponent<StraightLineProjectile>();
+            prjc.ownerWeapon = this;
+            prjc.flyingDirection = (owner.GetAbilityByUniqueSkillName("HandleWeapon") as TDCharacterAbilityHandleWeapon).aimingDirection;
+            prjc.transform.position = firePoint.transform.position;
+            prjc.transform.rotation = Quaternion.FromToRotation(Vector3.right, prjc.flyingDirection);
+            prjc.Initialization();
+        });
 
         weaponStates.ChangeState(WeaponStates.WeaponDelayBetweenUses);
     }
@@ -424,9 +442,11 @@ public class TDWeapon : MonoBehaviour
         Debug.Log("Weapon Delay Between Uses");
         _timeBetweenFireCounter = timeBetweenFire;
         weaponStates.ChangeState(WeaponStates.WeaponDelayBetweenUses);
+    }
 
-
-
+    public virtual void InstanteWeaponFire()
+    {
+        _timeBetweenFireCounter = timeBetweenFire;
     }
 
 

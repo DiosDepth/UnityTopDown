@@ -18,6 +18,7 @@ namespace InputSpace
 public class InputSystemManager : Singleton<InputSystemManager>
 {
     public bool isTestMode;
+    public bool isShowDebug;
     public UnityAction<InputAction.CallbackContext> Gameplay_InputAction_Movement;
     public UnityAction<InputAction.CallbackContext> Gameplay_InputAction_Attack;
     public UnityAction<InputAction.CallbackContext> Gameplay_InputAction_Dash;
@@ -54,59 +55,103 @@ public class InputSystemManager : Singleton<InputSystemManager>
     {
         base.Initialization();
         playerInput = GetComponent<PlayerInput>();
-        Debug.Log("InputSystemManager" +" : " + instance.gameObject.name);
+
+#if UNITY_EDITOR
+        ExtDebug.ShowDebugLog("InputSystemManager" + " : " + instance.gameObject.name, isShowDebug);
+#endif 
         TDManagerEvent.Trigger(ManagerEventType.InitialCompleted, this.gameObject.name);
     }
 
     public void InputActionFunction_Movement(InputAction.CallbackContext callbackContext)
     {
-        Debug.Log("InputSystemManager Call-Start InputActionFunction_Movement -> " + callbackContext.action.name);
+#if UNITY_EDITOR
+        ExtDebug.ShowDebugLog("InputSystemManager Call-Start InputActionFunction_Movement -> " + callbackContext.action.name, isShowDebug);
+#endif
+       
         if (Gameplay_InputAction_Movement == null) { return; }
         Gameplay_InputAction_Movement.Invoke(callbackContext);
-        Debug.Log("InputSystemManager Call-End InputActionFunction_Movement -> " + callbackContext.action.name);
+#if UNITY_EDITOR
+        ExtDebug.ShowDebugLog("InputSystemManager Call-End InputActionFunction_Movement -> " + callbackContext.action.name, isShowDebug);
+#endif
+    
 
     }
     public void InputActionFunction_Attack(InputAction.CallbackContext callbackContext)
     {
-        Debug.Log("InputSystemManager Call-Start InputActionFunction_Attack -> " + callbackContext.action.name);
+#if UNITY_EDITOR
+        ExtDebug.ShowDebugLog("InputSystemManager Call-Start InputActionFunction_Attack -> " + callbackContext.action.name, isShowDebug);
+#endif
+  
         if (Gameplay_InputAction_Attack == null) { return; }
         Gameplay_InputAction_Attack.Invoke(callbackContext);
-        Debug.Log("InputSystemManager Call-End  InputActionFunction_Attack -> " + callbackContext.action.name);
+#if UNITY_EDITOR
+        ExtDebug.ShowDebugLog("InputSystemManager Call-End  InputActionFunction_Attack -> " + callbackContext.action.name, isShowDebug);
+#endif
+        
     }
     public void InputActionFunction_Dash(InputAction.CallbackContext callbackContext)
     {
-        Debug.Log("InputSystemManager Call-Start InputActionFunction_Dash -> " + callbackContext.action.name);
+#if UNITY_EDITOR
+        ExtDebug.ShowDebugLog("InputSystemManager Call-Start InputActionFunction_Dash -> " + callbackContext.action.name, isShowDebug);
+#endif
+        
         if (Gameplay_InputAction_Dash == null) { return; }
         Gameplay_InputAction_Dash.Invoke(callbackContext);
-        Debug.Log("InputSystemManager Call-End  InputActionFunction_Dash -> " + callbackContext.action.name);
+#if UNITY_EDITOR
+        ExtDebug.ShowDebugLog("InputSystemManager Call-End  InputActionFunction_Dash -> " + callbackContext.action.name, isShowDebug);
+#endif
+        
     }
     public void InputActionFunction_Interaction(InputAction.CallbackContext callbackContext)
     {
-        Debug.Log("InputSystemManager Call-Start InputActionFunction_Interaction -> " + callbackContext.action.name);
+#if UNITY_EDITOR
+        ExtDebug.ShowDebugLog("InputSystemManager Call-Start InputActionFunction_Interaction -> " + callbackContext.action.name, isShowDebug);
+#endif
+        
         if (Gameplay_InputAction_Interaction == null) { return; }
         Gameplay_InputAction_Interaction.Invoke(callbackContext);
-        Debug.Log("InputSystemManager Call-End  InputActionFunction_Interaction -> " + callbackContext.action.name);
+#if UNITY_EDITOR
+        ExtDebug.ShowDebugLog("InputSystemManager Call-End  InputActionFunction_Interaction -> " + callbackContext.action.name, isShowDebug);
+#endif
+        
     }
     public void InputActionFunction_Use(InputAction.CallbackContext callbackContext)
     {
-        Debug.Log("InputSystemManager Call-Start InputActionFunction_Use -> " + callbackContext.action.name);
+#if UNITY_EDITOR
+        ExtDebug.ShowDebugLog("InputSystemManager Call-Start InputActionFunction_Use -> " + callbackContext.action.name, isShowDebug);
+#endif
+      
         if (Gameplay_InputAction_Use == null) { return; }
         Gameplay_InputAction_Use.Invoke(callbackContext);
-        Debug.Log("InputSystemManager Call-End  InputActionFunction_Use -> " + callbackContext.action.name);
+#if UNITY_EDITOR
+        ExtDebug.ShowDebugLog("InputSystemManager Call-End  InputActionFunction_Use -> " + callbackContext.action.name, isShowDebug);
+#endif
+      
     }
     public void InputActionFunction_Pause(InputAction.CallbackContext callbackContext)
     {
-        Debug.Log("InputSystemManager Call-Start InputActionFunction_Pause -> " + callbackContext.action.name);
+#if UNITY_EDITOR
+        ExtDebug.ShowDebugLog("InputSystemManager Call-Start InputActionFunction_Pause -> " + callbackContext.action.name, isShowDebug);
+#endif
+        
         if (Gameplay_InputAction_Pause == null) { return; }
         Gameplay_InputAction_Pause.Invoke(callbackContext);
-        Debug.Log("InputSystemManager Call-End  InputActionFunction_Pause -> " + callbackContext.action.name);
+#if UNITY_EDITOR
+        ExtDebug.ShowDebugLog("InputSystemManager Call-End  InputActionFunction_Pause -> " + callbackContext.action.name, isShowDebug);
+#endif
+        
     }
 
     public void InputActionFunction_Aiming(InputAction.CallbackContext callbackContext)
     {
-        Debug.Log("InputSystemManager Call-Start InputActionFunction_Aiming -> " + callbackContext.action.name);
+#if UNITY_EDITOR
+        ExtDebug.ShowDebugLog("InputSystemManager Call-Start InputActionFunction_Aiming -> " + callbackContext.action.name, isShowDebug);
+#endif
         if (GamePlay_InputAction_Aiming == null) { return; }
         GamePlay_InputAction_Aiming.Invoke(callbackContext);
-        Debug.Log("InputSystemManager Call-End  InputActionFunction_Aiming -> " + callbackContext.action.name);
+#if UNITY_EDITOR
+        ExtDebug.ShowDebugLog("InputSystemManager Call-End  InputActionFunction_Aiming -> " + callbackContext.action.name, isShowDebug);
+#endif
+ 
     }
 }
