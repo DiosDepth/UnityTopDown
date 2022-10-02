@@ -42,7 +42,7 @@ public partial class @PlayerInputAsset : IInputActionCollection2, IDisposable
                     ""id"": ""006580d7-ea77-40ad-98c6-d0ccb777fbde"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": ""Press(pressPoint=0.2,behavior=2)"",
+                    ""interactions"": """",
                     ""initialStateCheck"": false
                 },
                 {
@@ -118,7 +118,7 @@ public partial class @PlayerInputAsset : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""a49f2485-35e6-4807-ae38-abca09e16c7c"",
                     ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": ""Hold"",
+                    ""interactions"": ""Hold(duration=3,pressPoint=1)"",
                     ""processors"": """",
                     ""groups"": ""PlayerKeyBoard"",
                     ""action"": ""Attack"",

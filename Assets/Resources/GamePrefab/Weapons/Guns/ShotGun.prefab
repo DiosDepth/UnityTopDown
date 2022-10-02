@@ -188,9 +188,9 @@ MonoBehaviour:
   ChargeTimeStamp: 0
   APConsumer: 0
   APConsumeValue: 0
-  initialDamageDelay: 0.2
-  activeDamageDuration: 0.1
-  afterDamageDelay: 0.2
+  initialDamageDelay: 0
+  activeDamageDuration: 0
+  afterDamageDelay: 0
   damageMask:
     serializedVersion: 2
     m_Bits: 4294967295

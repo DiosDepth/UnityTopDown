@@ -17,6 +17,7 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
     public float maxMoveSpeed = 10;
     public float acceleration = 10;
     public float thresholdMoveSpeed = 0.01f;
+    public float chargeAttackMoveSpeedModifer = 0.3f;
     public bool isFlipCharacter = true;
 
     public Transform rotationRoot;
@@ -101,8 +102,7 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
     public void HandleMovement(InputAction.CallbackContext callbackContext)
     {
         if (owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Dash ||
-            owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Skill ||
-            owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.ChargeingAttack)
+            owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Skill )
         {
             inputDirection.x = 0;
             inputDirection.y = 0;
@@ -185,15 +185,10 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
             return;
         }
 
-        if (owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Skill ||
-            owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Attack ||
-            owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Chargeing ||
-            owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.ChargeingAttack ||
-            owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Charged)
+        if (owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Skill )
         {
             return;
         }
-
         if (owner.conditionState.currentState == TDEnums.CharacterStates.CharacterConditions.Dead ||
            owner.conditionState.currentState == TDEnums.CharacterStates.CharacterConditions.Frozen ||
            owner.conditionState.currentState == TDEnums.CharacterStates.CharacterConditions.Immobilized ||
@@ -203,6 +198,40 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
             return;
         }
 
+        float m_tempspeedmodify = 1;
+        switch ((owner.GetAbilityByUniqueSkillName("HandleWeapon") as TDCharacterAbilityHandleWeapon).currentMainWeapon?.weaponType)
+        {
+            case WeaponNameSpace.WeaponType.Instante:
+                break;
+            case WeaponNameSpace.WeaponType.Projectile:
+                if (owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Chargeing)
+                {
+                    m_tempspeedmodify = chargeAttackMoveSpeedModifer;
+                }
+                if (owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Charged)
+                {
+                    m_tempspeedmodify = chargeAttackMoveSpeedModifer;
+                }
+                if (owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.ChargeingAttack)
+                {
+
+                }
+                break;
+            case WeaponNameSpace.WeaponType.Melee:
+                if(owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Chargeing)
+                {
+                    m_tempspeedmodify = chargeAttackMoveSpeedModifer;
+                }
+                if (owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Charged)
+                {
+                    m_tempspeedmodify = chargeAttackMoveSpeedModifer;
+                }
+                if (owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.ChargeingAttack)
+                {
+                    return;
+                }
+                    break;
+        }
 
         //计算当前帧的加速度比例并且对操作输入进行限制, 让其在当前帧内的Magnitude小于或者等于当前帧的加速比例
 
@@ -235,7 +264,7 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
         }
 
         deltaMovement = lerpedInput;
-        deltaSpeed = Mathf.Lerp(0, maxMoveSpeed, deltaAcceleration);//根据当前帧的加速比例 计算当前帧的移动速度
+        deltaSpeed = Mathf.Lerp(0, maxMoveSpeed, deltaAcceleration) * m_tempspeedmodify;//根据当前帧的加速比例 计算当前帧的移动速度
         deltaMovement *= deltaSpeed;
 
         //限制最大移动速度

@@ -123,30 +123,6 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
  
             WeaponChargeStart();
         }
-        ////完成了HoldOn
-        //if (callbackContext.phase == InputActionPhase.Performed)
-        //{
-        //    if (currentMainWeapon.isStartCharging == false)
-        //    {
-        //        if (Time.time - currentMainWeapon.ChargeTimeStamp >= currentMainWeapon.StartChargingTime)
-        //        {
-        //            currentMainWeapon.isStartCharging = true;
-        //        }
-        //    }
-        //    if (currentMainWeapon.isStartCharging == true)
-        //    {
-        //        if (Time.time - currentMainWeapon.ChargeTimeStamp >= currentMainWeapon.CompletedChargeTime)
-        //        {
-        //            currentMainWeapon.isChargingCompleted = true;
-        //            WeaponChargeCompleted();
-        //        }
-        //        else
-        //        {
-        //            WeaponCharging();
-        //        }
-        //    }
-        //}
-        //放开按键开火
         if (callbackContext.phase == InputActionPhase.Canceled)
         {
             if (currentMainWeapon.isChargingCompleted)
@@ -197,7 +173,7 @@ public class TDCharacterAbilityHandleWeapon : TDCharacterAbility
         //处理武器的蓄力攻击
         if(handleState == null)
         {
-            Debug.LogWarning("handleState is null, please initial weapon before using");
+            Debug.LogWarning("handleState is null, please intiial weapon before using");
             return;
         }
         if (handleState?.currentState == HandleWeaponState.Charging)

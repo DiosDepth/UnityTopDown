@@ -28,8 +28,6 @@ namespace TDEnums
             Null,
             Idle,
             Move,
-            Partol,
-            Chasing,
             Attack,
             Chargeing,
             Charged,
@@ -37,11 +35,19 @@ namespace TDEnums
             Skill,
             Dash,
         }
+
+        public enum AIDicisionStates
+        {
+            Idle,
+            Partol,
+            Chasing,
+        }
     }
 }
 
 public class TDCharacter : MonoBehaviour
 {
+    public bool isShowDebug;
     public CharacterType characterType = CharacterType.Player;
     public TDStateMachine<CharacterStates.MovementStates> movementState;
     public TDStateMachine<CharacterStates.CharacterConditions> conditionState;
@@ -93,6 +99,10 @@ public class TDCharacter : MonoBehaviour
         AssignCharacterAnimator();
         InitialAbility();
 
+
+        movementState.triggerDebugLog = isShowDebug;
+        conditionState.triggerDebugLog = isShowDebug;
+        
         //Debug.Log("MovementState : " + movementState.currentState);
         //Debug.Log("ConditionState : " + conditionState.currentState);
     }

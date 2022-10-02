@@ -25,6 +25,7 @@ public class TDStateMachine<T> where T : struct, IComparable, IConvertible, IFor
     public T currentState;
     public T previousState;
     public bool triggerEvent = false;
+    public bool triggerDebugLog = false;
 
     public TDStateMachine(GameObject m_target, bool istrigger_event = false)
     {
@@ -42,6 +43,12 @@ public class TDStateMachine<T> where T : struct, IComparable, IConvertible, IFor
         currentState = newState;
         if(triggerEvent)
             TDEventManager.TriggerEvent<TDStateChangeEvent<T>>(new TDStateChangeEvent<T>(this));
+#if UNITY_EDITOR
+        if (triggerDebugLog)
+        {
+            Debug.Log(target.transform.name + " : " + ToString());
+        }
+#endif
     }
 
     public virtual void RestorePreviousState()
@@ -49,6 +56,11 @@ public class TDStateMachine<T> where T : struct, IComparable, IConvertible, IFor
         currentState = previousState;
         if(triggerEvent)
             TDEventManager.TriggerEvent<TDStateChangeEvent<T>>(new TDStateChangeEvent<T>(this));
+    }
+
+    public override string ToString()
+    {
+        return previousState.ToString() + "--->" + currentState.ToString();
     }
 }
 

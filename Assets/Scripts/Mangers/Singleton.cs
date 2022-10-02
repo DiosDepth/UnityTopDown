@@ -5,6 +5,7 @@ using UnityEngine;
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour,new()
 {
     public static bool startUpdate;
+    public bool isShowDebug;
     public static T instance
     {
         get

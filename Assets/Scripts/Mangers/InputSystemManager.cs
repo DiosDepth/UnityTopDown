@@ -18,7 +18,7 @@ namespace InputSpace
 public class InputSystemManager : Singleton<InputSystemManager>
 {
     public bool isTestMode;
-    public bool isShowDebug;
+
     public UnityAction<InputAction.CallbackContext> Gameplay_InputAction_Movement;
     public UnityAction<InputAction.CallbackContext> Gameplay_InputAction_Attack;
     public UnityAction<InputAction.CallbackContext> Gameplay_InputAction_Dash;

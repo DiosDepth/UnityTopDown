@@ -169,6 +169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9ce8660cfb201e4d8dc216164d284b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isShowDebug: 0
   characterType: 0
   characterModleContainer: {fileID: 0}
   characterAnimator: {fileID: 0}
@@ -202,6 +203,7 @@ MonoBehaviour:
   maxMoveSpeed: 7
   acceleration: 3
   thresholdMoveSpeed: 0.01
+  chargeAttackMoveSpeedModifer: 0.3
   isFlipCharacter: 1
   rotationRoot: {fileID: 4000013401435556}
   movementForbiden: 0
@@ -310,6 +312,7 @@ MonoBehaviour:
   InitialWeapon: 2
   currentMainWeapon: {fileID: 0}
   currentSecondWeapon: {fileID: 0}
+  aimingDirection: {x: 0, y: 0, z: 0}
 --- !u!114 &114088543553715488
 MonoBehaviour:
   m_ObjectHideFlags: 0
