@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using WeaponNameSpace;
@@ -32,6 +31,7 @@ namespace WeaponNameSpace
         None,
         Sword,
         ShotGun,
+        SniperRifle,
     }
     public enum WeaponStates
     {
@@ -110,25 +110,36 @@ public class TDWeapon : MonoBehaviour
     public bool APConsumer;
     public int APConsumeValue;
 
-    [Header("Instante Weapon Damage Settings")]
-    public float initialDamageDelay =0.3f;
-    public float activeDamageDuration = 0.3f;
-    public float afterDamageDelay = 0.4f;
+    public Transform firePoint;
 
-    public LayerMask damageMask = 1 << 9;
-    public Vector3 damageAreaSize = new Vector3(1,1,1);
-    public Vector3 damageAreaOffset = new Vector3(0,0,1);
+    [Header("Melee Weapon Damage Settings")]
+    public float meleeWeaponInitialDamageDelay =0.3f;
+    public float meleeWeaponActiveDamageDuration = 0.3f;
+    public float meleeWeaponAfterDamageDelay = 0.4f;
+
+    public LayerMask meleeWeaponDamageMask = 1 << 9;
+    public Vector3 meleeWeaponDamageAreaSize = new Vector3(1,1,1);
+    public Vector3 meleeWeaponDamageAreaOffset = new Vector3(0,0,1);
     public bool showDamageArea = false;
 
 
     [Header("Projectile Weapon Damage Settings")]
     public WeaponShottingType shottingType = WeaponShottingType.SG;
     public AvalibleProjectile bullet = AvalibleProjectile.PistolBullet;
-    public Transform firePoint;
-    public float totalDamage = 20;
-    public int bulletCount = 3;
-
     
+    public float projectileTotalDamage = 20;
+    public float projectileScatterAngle = 60;
+    public int projectileScatterCount = 3;
+    protected List<Vector2> _projectilescatterinfo = new List<Vector2>();
+    protected List<Vector2>.Enumerator _projectilescatterEnumerator;
+
+    [Header("Instance Weapon Damage Settings")]
+    public LayerMask instanceWeaponDamageMask = 1 << 9;
+    public float instanceWeaponTraceDistance = 5f;
+    public float instanceWeaponScatterAngle = 60;
+    public int intinstanceWeaponScatterCount = 3;
+    public ContactFilter2D instanceWeaponFilter;
+    protected RaycastHit2D[] _hitInfoList;
     
 
     [Header("WeaponAttribute")]
@@ -159,6 +170,7 @@ public class TDWeapon : MonoBehaviour
     public TDCharacter owner;
     protected TDCharacterAbilityMovement _movement;
     protected TDCharacterAbilityHandleWeapon _weaponHandler;
+    protected Vector3 _aimDirection;
 
     protected bool _isMeleeAttacking = false;
     // Start is called before the first frame update
@@ -198,9 +210,15 @@ public class TDWeapon : MonoBehaviour
         weaponAnimator = GetComponentInChildren<Animator>();
         _movement = owner.transform.GetComponent<TDCharacterAbilityMovement>();
         _weaponHandler = owner.transform.GetComponent<TDCharacterAbilityHandleWeapon>();
+
+        if(firePoint == null)
+        {
+            firePoint = transform.Find("FirePoint");
+        }
         weaponStates = new TDStateMachine<WeaponStates>(this.gameObject);
         InitializeAnimatorParameters();
         weaponStates.ChangeState(WeaponStates.WeaponIdle);
+        
 
     }
 
@@ -224,7 +242,7 @@ public class TDWeapon : MonoBehaviour
     public virtual void MeleeWeaponDamageAreaON()
     {
         TDCharacterAbilityHealth temp_health;
-        damagedCollider = Physics.OverlapBox(_movement.rotationRoot.TransformPoint(damageAreaOffset), damageAreaSize, Quaternion.identity, owner.attribute.damageMask);
+        damagedCollider = Physics.OverlapBox(_movement.rotationRoot.TransformPoint(meleeWeaponDamageAreaOffset), meleeWeaponDamageAreaSize, Quaternion.identity, owner.attribute.damageMask);
         
         if(damagedCollider.Length >0 )
         {
@@ -249,7 +267,7 @@ public class TDWeapon : MonoBehaviour
         {
 
             Gizmos.color = Color.red;
-            Gizmos.DrawWireCube(_movement.rotationRoot.TransformPoint(damageAreaOffset), damageAreaSize);
+            Gizmos.DrawWireCube(_movement.rotationRoot.TransformPoint(meleeWeaponDamageAreaOffset), meleeWeaponDamageAreaSize);
             showDamageArea = false; 
         }
 
@@ -338,7 +356,7 @@ public class TDWeapon : MonoBehaviour
                 StartCoroutine(MeleeWeaoponFire());
                 break;
             case WeaponType.Instante:
-
+                InstanteWeaponFire();
                 break;
         }
 
@@ -410,19 +428,35 @@ public class TDWeapon : MonoBehaviour
         _timeBetweenFireCounter = timeBetweenFire;
         //todo player VFX
         //todo play SFX
-    
-        TDPoolManager.instance.GetObj(bulletPrefabPath + bullet.ToString(), true, (obj) => 
-        {
-            StraightLineProjectile prjc = obj.GetComponent<StraightLineProjectile>();
-            prjc.ownerWeapon = this;
-            prjc.flyingDirection = (owner.GetAbilityByUniqueSkillName("HandleWeapon") as TDCharacterAbilityHandleWeapon).aimingDirection;
-            prjc.transform.position = firePoint.transform.position;
-            prjc.transform.rotation = Quaternion.FromToRotation(Vector3.right, prjc.flyingDirection);
-            prjc.Initialization();
-        });
+        _aimDirection = (owner.GetAbilityByUniqueSkillName("HandleWeapon") as TDCharacterAbilityHandleWeapon).aimingDirection;
 
+        
+        _projectilescatterinfo = ExtensionMathTools.DivideAngleByCountXY(_aimDirection, projectileScatterAngle, projectileScatterCount);
+        _projectilescatterEnumerator = _projectilescatterinfo.GetEnumerator();//create a Enumerator for spawning projectile with scatter angle.
+        
+
+        for (int i = 0; i < _projectilescatterinfo.Count; i++)
+        {
+            TDPoolManager.instance.GetObj(bulletPrefabPath + bullet.ToString(), true, (obj) =>
+            {
+                StraightLineProjectile prjc = obj.GetComponent<StraightLineProjectile>();
+                prjc.ownerWeapon = this;
+
+                //you can't just using _scatterinfo[i], cus projectile spawned in GetObj which is a Coroutine method, when the method called [i] already looped all the index of _scatterinfo and lager than _scatterinfo.Count
+                // it cus _scatterinfo[i] out of range
+                _projectilescatterEnumerator.MoveNext();
+                prjc.flyingDirection = _projectilescatterEnumerator.Current;
+                
+                prjc.transform.position = firePoint.transform.position;
+                prjc.transform.rotation = Quaternion.FromToRotation(Vector3.right, prjc.flyingDirection);
+                prjc.Initialization();
+            });
+
+        }
         weaponStates.ChangeState(WeaponStates.WeaponDelayBetweenUses);
     }
+
+
 
     public virtual IEnumerator MeleeWeaoponFire()
     {
@@ -431,22 +465,42 @@ public class TDWeapon : MonoBehaviour
            yield break;
         }
         _isMeleeAttacking = true;
-        yield return new WaitForSeconds(initialDamageDelay);
+        yield return new WaitForSeconds(meleeWeaponInitialDamageDelay);
         Debug.Log("TDWeapon : " + "EnableDamage Area");
         //todo create a weapon damage area;
         MeleeWeaponDamageAreaON();
-        yield return new WaitForSeconds(activeDamageDuration);
+        yield return new WaitForSeconds(meleeWeaponActiveDamageDuration);
         Debug.Log("TDWeapon : " + "Disable Damage Area");
-        yield return new WaitForSeconds(afterDamageDelay);
+        yield return new WaitForSeconds(meleeWeaponAfterDamageDelay);
         _isMeleeAttacking = false;
         Debug.Log("Weapon Delay Between Uses");
         _timeBetweenFireCounter = timeBetweenFire;
         weaponStates.ChangeState(WeaponStates.WeaponDelayBetweenUses);
     }
 
+
+
     public virtual void InstanteWeaponFire()
     {
         _timeBetweenFireCounter = timeBetweenFire;
+        _aimDirection = (owner.GetAbilityByUniqueSkillName("HandleWeapon") as TDCharacterAbilityHandleWeapon).aimingDirection;
+
+
+        List<Vector2> temp_scaterinfo = ExtensionMathTools.DivideAngleByCountXY(_aimDirection, instanceWeaponScatterAngle, intinstanceWeaponScatterCount);
+
+       
+        for (int i = 0; i < temp_scaterinfo.Count; i++)
+        {
+
+            _hitInfoList = Physics2D.LinecastAll(firePoint.transform.position, temp_scaterinfo[i] * instanceWeaponTraceDistance + firePoint.transform.position.ToVector2(), instanceWeaponDamageMask);
+            Debug.DrawLine(firePoint.position, temp_scaterinfo[i] * instanceWeaponTraceDistance + firePoint.transform.position.ToVector2(), Color.red, 0.5f);
+
+        }
+
+
+
+
+        weaponStates.ChangeState(WeaponStates.WeaponDelayBetweenUses);
     }
 
 

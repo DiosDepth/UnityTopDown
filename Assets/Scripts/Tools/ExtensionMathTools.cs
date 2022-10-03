@@ -61,5 +61,10 @@ public static class ExtensionMathTools
         return new Vector3(m_vec2.x, m_vec2.y, 0);
     }
 
+    public static Vector2 ToVector2(this Vector3 m_vec3)
+    {
+        return new Vector2(m_vec3.x, m_vec3.y);
+    }
+
    
 }

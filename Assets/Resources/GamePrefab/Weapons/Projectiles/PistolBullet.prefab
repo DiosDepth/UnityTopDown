@@ -101,7 +101,7 @@ MonoBehaviour:
   lifeTime: 10
   hitMask:
     serializedVersion: 2
-    m_Bits: 15873
+    m_Bits: 15361
   hitVFX: {fileID: 0}
   _filter:
     useTriggers: 0

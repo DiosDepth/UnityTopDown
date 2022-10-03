@@ -1,3 +1,4 @@
 ID,Name,Type,Prefab
 1,Sword,Melee,GamePrefab\Weapons\Sword\Sword
 2,ShotGun,Projectile,GamePrefab\Weapons\Guns\ShotGun
+3,SniperRifle,Instance,GamePrefab\Weapons\Guns\SniperRifle
