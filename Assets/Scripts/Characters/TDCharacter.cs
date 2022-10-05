@@ -86,7 +86,7 @@ public class TDCharacter : MonoBehaviour
         controller = GetComponent<TDCharacterController>();
         abilityLists = GetComponents<TDCharacterAbility>();
 
-        for (int i = 0; i < abilityLists.Length -1 ; i++)
+        for (int i = 0; i < abilityLists.Length ; i++)
         {
             abilityDic.Add(abilityLists[i].uniqueSkillName, i);
         }

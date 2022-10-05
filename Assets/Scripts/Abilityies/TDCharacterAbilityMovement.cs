@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.AI;
 
 public enum MovementType
 {
@@ -36,7 +37,7 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
     public Vector3 faceDirection;
 
     [Header("---Animation---")]
-    public AnimationParamInfo animParam_walk;
+    public string animParam_move;
     protected TDCharacterController _tdCharacterController;
     // Start is called before the first frame update
 
@@ -98,8 +99,25 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
 
        
     }
+    public override void HandleInput(InputAction.CallbackContext callbackContext)
+    {
+        base.HandleInput(callbackContext);
+        if (movementForbiden)
+        {
+            inputDirection = Vector3.zero;
+            return;
+        }
+        if (owner.characterType == TDEnums.CharacterType.Player)
+        {
+            HandleMovementPlayer(callbackContext);
+        }
+        if (owner.characterType == TDEnums.CharacterType.AI)
+        {
+           
+        }
+    }
 
-    public void HandleMovement(InputAction.CallbackContext callbackContext)
+    public void HandleMovementPlayer(InputAction.CallbackContext callbackContext)
     {
         if (owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Dash ||
             owner.movementState.currentState == TDEnums.CharacterStates.MovementStates.Skill )
@@ -117,28 +135,19 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
     
             inputDirection.x = callbackContext.ReadValue<Vector2>().x;
             inputDirection.y = callbackContext.ReadValue<Vector2>().y;
-        
-
-   
     }
 
-    public override void HandleInput(InputAction.CallbackContext callbackContext)
+    public void HandleMovementAI(NavMeshAgent navmeshagent)
     {
-        base.HandleInput(callbackContext);
         if (movementForbiden)
         {
             inputDirection = Vector3.zero;
             return;
         }
-        if (owner.characterType == TDEnums.CharacterType.Player)
-        {
-            HandleMovement(callbackContext);
-        }
-        if(owner.characterType == TDEnums.CharacterType.AI)
-        {
-            //moveDirection = Vector3.zero;
-        }
+
+
     }
+
 
     public override void EarlyUpdateAbility()
     {
@@ -318,13 +327,14 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
 
     protected override void InitializeAnimatorParameters()
     {
-        RegisterAnimatorParameter(animParam_walk);
+        RegisterAnimatorParameter(animParam_move,AnimatorControllerParameterType.Bool);
 
     }
     public override void UpdateAnimators()
     {
         base.UpdateAnimators();
-        owner.characterAnimator.UpdateAnimationParamBool(animParam_walk.paramaterName, IsMovingByInput(), owner.characterAnimatorParameters);
+
+        owner.characterAnimator.UpdateAnimationParamBool(animParam_move, IsMovingByInput(), owner.characterAnimatorParameters);
    
     }
 }

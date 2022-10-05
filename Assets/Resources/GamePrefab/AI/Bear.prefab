@@ -212,6 +212,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9ce8660cfb201e4d8dc216164d284b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isShowDebug: 0
   characterType: 1
   characterModleContainer: {fileID: 0}
   characterAnimator: {fileID: 0}
@@ -258,15 +259,16 @@ MonoBehaviour:
   cdTime: 0
   isFixedUpdate: 1
   isSkill: 0
-  uniqueSkillName: 
   isAbilityOn: 1
   owner: {fileID: 0}
   animator: {fileID: 0}
+  uniqueSkillName: Movement
   isShowDebug: 0
   movementType: 0
   maxMoveSpeed: 6
   acceleration: 3
   thresholdMoveSpeed: 0.01
+  chargeAttackMoveSpeedModifer: 0.3
   isFlipCharacter: 1
   rotationRoot: {fileID: 4000013401435556}
   movementForbiden: 0
@@ -277,9 +279,7 @@ MonoBehaviour:
   deltaSpeed: 0
   deltaAcceleration: 0
   faceDirection: {x: 0, y: 0, z: 0}
-  animParam_walk:
-    paramaterName: 
-    paramaterType: 0
+  animParam_move: Move
 --- !u!114 &1303694441724376286
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -296,15 +296,17 @@ MonoBehaviour:
   cdTime: 0
   isFixedUpdate: 0
   isSkill: 0
-  uniqueSkillName: 
   isAbilityOn: 1
   owner: {fileID: 0}
   animator: {fileID: 0}
+  uniqueSkillName: HandleWeapon
   isShowDebug: 0
-  mainweaponSlot: {fileID: 0}
-  InitialWeapon: {fileID: 0}
+  mainWeaponSlot: {fileID: 0}
+  mainWeaponRoot: {fileID: 0}
+  InitialWeapon: 0
   currentMainWeapon: {fileID: 0}
   currentSecondWeapon: {fileID: 0}
+  aimingDirection: {x: 0, y: 0, z: 0}
 --- !u!114 &114038171270093922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -321,10 +323,10 @@ MonoBehaviour:
   cdTime: 0
   isFixedUpdate: 0
   isSkill: 0
-  uniqueSkillName: 
   isAbilityOn: 1
   owner: {fileID: 0}
   animator: {fileID: 0}
+  uniqueSkillName: Health
   isShowDebug: 0
   currentHP: 0
   lastCaster: {fileID: 0}
@@ -356,6 +358,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee99f68516876924f8e06e94a92ca489, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  brainActive: 1
+  isComplexAI: 0
   States:
   - StateName: Idle
     Actions:
@@ -384,9 +388,8 @@ MonoBehaviour:
       - Decision: {fileID: 893975176}
         TrueState: 
         FalseState: Move
-  brainActive: 1
   isOnGizmos: 0
-  agent: {fileID: 0}
+  agent: {fileID: 195808105137480710}
   currentState:
     StateName: 
     Actions:

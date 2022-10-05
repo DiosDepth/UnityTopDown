@@ -197,7 +197,7 @@ MonoBehaviour:
   isAbilityOn: 1
   owner: {fileID: 0}
   animator: {fileID: 0}
-  uniqueSkillName: 
+  uniqueSkillName: Movement
   isShowDebug: 0
   movementType: 1
   maxMoveSpeed: 7
@@ -214,9 +214,7 @@ MonoBehaviour:
   deltaSpeed: 0
   deltaAcceleration: 0
   faceDirection: {x: 0, y: 0, z: 0}
-  animParam_walk:
-    paramaterName: Move
-    paramaterType: 4
+  animParam_move: Move
 --- !u!114 &114372966451318376
 MonoBehaviour:
   m_ObjectHideFlags: 0

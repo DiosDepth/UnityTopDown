@@ -4,12 +4,6 @@ using UnityEngine;
 using TDEnums;
 using UnityEngine.InputSystem;
 
-[System.Serializable]
-public struct AnimationParamInfo
-{
-    public string paramaterName;
-    public AnimatorControllerParameterType paramaterType;
-}
 
 
 
@@ -154,15 +148,15 @@ public class TDCharacterAbility : MonoBehaviour
     {
     }
 
-    protected virtual void RegisterAnimatorParameter(AnimationParamInfo m_paraminfo)
+    protected virtual void RegisterAnimatorParameter(string m_paramname,AnimatorControllerParameterType m_type)
     {
         if (animator == null)
         {
             return;
         }
-        if (animator.HasParameterOfType(m_paraminfo.paramaterName, m_paraminfo.paramaterType))
+        if (animator.HasParameterOfType(m_paramname, m_type))
         {
-            owner.characterAnimatorParameters.Add(m_paraminfo.paramaterName);
+            owner.characterAnimatorParameters.Add(m_paramname);
         }
     }
 

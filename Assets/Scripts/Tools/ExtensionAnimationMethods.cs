@@ -19,7 +19,6 @@ public static class ExtensionAnimationMethods
         return false;
     }
 
-
     public static void UpdateAnimationParamFloat(this Animator self, string m_paramname, float m_value, List<string> m_paramlist)
     {
         if(m_paramlist.Contains(m_paramname))

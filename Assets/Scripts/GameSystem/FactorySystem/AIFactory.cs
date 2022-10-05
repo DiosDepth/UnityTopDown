@@ -135,31 +135,6 @@ public class AIFactory : GameObjectFactory
             
         }
     }
-
-   /* public void SpawnAI(Transform m_spawnTRS)
-    {
-        string temp_poolername = TDGameObjectPoolManager.instance.GetPoolerName(spawnInfo.AIType);
-        if(poolerHolder.PoolerExsit(temp_poolername))
-        {
-            Pooler temp_pooler;
-            temp_pooler = poolerHolder.GetPoolerFromDic(temp_poolername);
-            ai = poolerHolder.GetGameObjectFromPooler(temp_pooler);
-        }
-        else
-        {
-            poolerHolder.CreateOnePoolerToHolder(spawnInfo.AIType, true, 3,temp_poolername);
-            Pooler temp_pooler;
-            temp_pooler = poolerHolder.GetPoolerFromDic(temp_poolername);
-            ai = poolerHolder.GetGameObjectFromPooler(temp_pooler);
-        }
-        ai.transform.SetPositionAndRotation(spawnInfo.spawnPoints[0].position, spawnInfo.spawnPoints[0].rotation);
-        ai.GetComponent<TDCharacter>().Initialization();
-        ai.GetComponent<TDCharacter>().isUpdateAbility = true;
-        ai.gameObject.SetActive(true);
-
-    }*/
-
-        //TODO RandomNoRepeat
     public void SpawnAIatPosition(AISpawnInfo m_spawninfo, AISpawnMode m_spawnmode)
     {
        
@@ -287,10 +262,7 @@ public class AIFactory : GameObjectFactory
 
     public void ActiveAI(GameObject m_ai)
     {
-        
-        m_ai.GetComponent<TDCharacter>().Initialization();
-        m_ai.GetComponent<TDCharacter>().isUpdateAbility = true;
-        //Invoke("UpdateAbility",1);
+        m_ai.GetComponent<AIBrain>().Initialization();
         m_ai.gameObject.SetActive(true);
     }
 

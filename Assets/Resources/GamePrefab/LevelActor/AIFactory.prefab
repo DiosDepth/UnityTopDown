@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3047498390029622336}
   - component: {fileID: 3047498390029622337}
-  - component: {fileID: 3047498390029622343}
   m_Layer: 0
   m_Name: AIFactory
   m_TagString: Untagged
@@ -49,11 +48,12 @@ MonoBehaviour:
   spawnPermission: 1
   isFinished: 0
   waveInfo:
-  - minWaveDelay: 0
-    maxWaveDelay: 0
+  - minWaveDelay: 1
+    maxWaveDelay: 1
     spawnInfo:
-    - AIType: 1
-      count: 7
+    - avaliableAI: 0
+      name: 
+      count: 1
       minSpawnDelay: 2
       maxSpawnDelay: 2
       spawnPoints:
@@ -63,25 +63,8 @@ MonoBehaviour:
       - {fileID: 0}
       - {fileID: 0}
       - {fileID: 0}
-      spawnMode: 1
+      spawnMode: 4
   curWaveIndex: 0
   curSpawnIndex: 0
   curCountIndex: 0
-  poolerHolder: {fileID: 0}
   theLastOne: {fileID: 0}
---- !u!114 &3047498390029622343
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3047498390029622338}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51b70d3d2213dec4b8e2a4af6ab0e7a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canExpend: 1
-  poolerList: []
-  holderName: 
-  poolerHolderObj: {fileID: 0}

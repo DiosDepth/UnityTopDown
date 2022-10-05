@@ -7,17 +7,25 @@ using Malee.List;
 
 
 [RequireComponent(typeof(TDCharacter))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class AIBrain : MonoBehaviour
 {
-    
+    [Header("---BasicSettings---")]
+    public bool brainActive = false;
+    /// <summary>
+    /// if iscomlexAI == true, AI brain will using hearing and vision to get env data, that allow Ai to do complex behavior like searching player 
+    /// </summary>
+    public bool isComplexAI = false;
+
+    [Header("---StateSettings---")]
     public List<AIState> States;
 
-    public bool brainActive = true;
     [Header("---DebugSettings---")]
     public bool isOnGizmos=false;
     public NavMeshAgent agent;
     public NavMeshPath path;
 
+   
     public Dictionary<string, List<GameObject>> hearingDic = new Dictionary<string, List<GameObject>>();
     public Dictionary<string, List<GameObject>> seeingDic = new Dictionary<string, List<GameObject>>();
 
@@ -32,23 +40,32 @@ public class AIBrain : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+    }
+
+    public void Initialization()
+    {
+
+        
+       if(agent == null)
+        {
+            Debug.LogError("none reference of navemesh agent, please assign a reference before using it");
+            return;
+        }
+        agent.updateRotation = false;
+        agent.updateUpAxis = false;
         character = GetComponent<TDCharacter>();
         character.Initialization();
-        character.isUpdateAbility = true;
-        agent = FindObjectOfType<NavMeshAgent>();
         InitializeStates();
         InitializeDecisions();
-        if(States.Count >0)
+        if (States.Count > 0)
         {
             TransitionToState(States[0].StateName);
         }
-        //moveto = MoveTo(targetPos.position);
-        //Debug.Log(path.status + " : " + path.corners.Length);
-
-        //agent.SetDestination(targetPos.position);
-        //StopCoroutine(moveto);
-        //StartCoroutine(moveto);
+        brainActive = true;
+        character.isUpdateAbility = true;
     }
+
     void Update()
     {
         //aiPerception.UpdatePerception();
