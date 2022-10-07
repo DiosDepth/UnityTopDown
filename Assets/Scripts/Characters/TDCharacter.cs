@@ -110,6 +110,9 @@ public class TDCharacter : MonoBehaviour
 
     public virtual TDCharacterAbility GetAbilityByUniqueSkillName(string m_skillname)
     {
+        if (!abilityDic.ContainsKey(m_skillname))
+            return null;
+
         int index = abilityDic[m_skillname];
         return abilityLists[index];
     }

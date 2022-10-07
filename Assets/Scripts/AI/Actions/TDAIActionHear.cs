@@ -17,7 +17,7 @@ public class TDAIActionHear : TDAIAction
     public override void Initialization()
     {
         base.Initialization();
-        _hearingMaskValue = GetMaskValue(hearingMask);
+        _hearingMaskValue = ExtensionMethods.GetMaskValue(hearingMask);
     }
 
     public override void OnEnterAction()
@@ -32,7 +32,6 @@ public class TDAIActionHear : TDAIAction
             Hearing();
             _nextUpdateTime += hearingFrequency;
         }
-    
     }
 
     public override void OnExitAction()
@@ -44,7 +43,7 @@ public class TDAIActionHear : TDAIAction
     public void Hearing()
     {
         string layername;
-        Collider[] temp = Physics.OverlapSphere(transform.position, hearingRadius, hearingMask);
+        Collider2D[] temp = Physics2D.OverlapCircleAll(transform.position, hearingRadius, hearingMask);
         _brain.hearingDic.Clear();
 
         for (int i = 0; i < temp.Length; i++)
@@ -65,20 +64,7 @@ public class TDAIActionHear : TDAIAction
         }
     }
 
-    private List<int> GetMaskValue(LayerMask mask)
-    {
-        List<int> tempvalue = new List<int>();
-        for (int i = 0; i < 32; i++)
-        {
-            if((mask.value & (1<<i)) != 0)
-            {
-                Debug.Log("HearLayerMaskValue : " + i);
-                tempvalue.Add(i);
-            }
-        }
-        
-        return tempvalue;
-    }
+
 
     private void OnDrawGizmos()
     {
@@ -90,6 +76,9 @@ public class TDAIActionHear : TDAIAction
         {
             return;
         }
+        Gizmos.color = Color.blue;
+        
+        Gizmos.DrawWireSphere(transform.position, hearingRadius);
         if (_brain.hearingDic != null &&_brain.hearingDic.Count >0)
         {
             Gizmos.color = Color.red;

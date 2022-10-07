@@ -59,7 +59,7 @@ public class TDAIActionSee : TDAIAction
             layername = LayerMask.LayerToName(temp[i].gameObject.layer);
             if (Vector3.Angle(_faceDirection, (temp[i].transform.position - transform.position).normalized) <= seeingAngle / 2) // check angle
             {
-                if (Physics.Raycast(transform.position, transform.position.HorizontalDirctionTo(temp[i].gameObject.transform.position),out hit,seeingRadius,seeingMask)) //check blocker
+                if (Physics.Raycast(transform.position, transform.position.DirectionToXY(temp[i].gameObject.transform.position),out hit,seeingRadius,seeingMask)) //check blocker
                 {
                     if(hit.transform.gameObject.Equals(temp[i].gameObject))
                     {

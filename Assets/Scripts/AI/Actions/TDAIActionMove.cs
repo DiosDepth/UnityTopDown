@@ -71,17 +71,24 @@ public class TDAIActionMove : TDAIAction
         
         targetPos = GetTargetPos();
         _brain.agent.CalculatePath(targetPos, path);
+        if(path.corners.Length <= 0)
+        {
+            Debug.Log(_brain.agent.pathStatus);
+        }
         while (true)
         {
-            if (_brain.agent.pathStatus == NavMeshPathStatus.PathComplete)
+            if(!_brain.agent.pathPending )
             {
-                OnPathComplete(path);
-                break;
-            }
-            if (_brain.agent.pathStatus == NavMeshPathStatus.PathInvalid)
-            {
-                
-                break;
+                if(_brain.agent.pathStatus == NavMeshPathStatus.PathComplete && _brain.agent.hasPath)
+                {
+                    OnPathComplete(path);
+                    break;
+                }
+                if(_brain.agent.pathStatus == NavMeshPathStatus.PathPartial || _brain.agent.pathStatus == NavMeshPathStatus.PathInvalid)
+                {
+                    break;
+                }
+
             }
             yield return null;
         }
@@ -89,10 +96,12 @@ public class TDAIActionMove : TDAIAction
 
     protected virtual void OnPathComplete(NavMeshPath path)
     {
+
         _pathIndex = 0;
         _moveStart = true;
         isReached = false;
         _dir = Vector3.zero;
+        
         _nextPos = path.corners[0];
     }
 
@@ -100,7 +109,7 @@ public class TDAIActionMove : TDAIAction
     {
         if (_moveStart)
         {
-            if (transform.position.HorizontalEqula(_nextPos))
+            if (transform.position.EqualXY(_nextPos))
             {
                 _pathIndex++;
                 if (_pathIndex >= path.corners.Length)
@@ -123,11 +132,15 @@ public class TDAIActionMove : TDAIAction
                     }
                 }
             }
-            _dir = transform.position.HorizontalDirctionTo(_nextPos);
+            _dir = transform.position.DirectionToXY(_nextPos);
             _movement.SetMoveDirection(_dir);
         }
     }
 
+    protected virtual void StopMove()
+    {
+
+    }
 
     protected float CalculateTargetTolerentDistance()
     {
@@ -143,5 +156,7 @@ public class TDAIActionMove : TDAIAction
     {
         return GetTarget().transform.position;
     }
+
+
 
 }

@@ -230,6 +230,25 @@ public class AIFactory : GameObjectFactory
                 break;
             case AISpawnMode.SinglePoint:
                 temp_TRS = m_spawninfo.spawnPoints[0];
+                for (int i = 0; i < m_spawninfo.count; i++)
+                {
+                    curCountIndex = i;
+                    Spawn(m_spawninfo, false, (obj) =>
+                    {
+                        theLastOne = obj;
+                        if (temp_TRS == null)
+                        {
+                            Debug.Log("AIFactory : " + "No Found Transfrom infomation in Wave[" + curWaveIndex + "],Spawn[" + curSpawnIndex + "],Count[" + curCountIndex + "]");
+                            return;
+                        }
+                        theLastOne.transform.SetPositionAndRotation(temp_TRS.position, temp_TRS.rotation);
+                        if (autoActiveAIAfterSpawn)
+                        {
+                            ActiveAI(theLastOne);
+                        }
+                    });
+                }
+                
                 break;
         }
 
@@ -262,8 +281,9 @@ public class AIFactory : GameObjectFactory
 
     public void ActiveAI(GameObject m_ai)
     {
-        m_ai.GetComponent<AIBrain>().Initialization();
         m_ai.gameObject.SetActive(true);
+        m_ai.GetComponent<AIBrain>().Initialization();
+    
     }
 
     public void UpdateAbility()

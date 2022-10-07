@@ -27,7 +27,8 @@ public class TDAIActionFollowTarget : TDAIActionMove
     }
     public override void OnEnterAction()
     {
-        selfRadius = GetComponent<CharacterController>().radius;
+        
+        selfRadius = GetComponent<CapsuleCollider2D>().size.x;
         UpdateTarget(GetTarget().transform);
         CalculatePath();
     }
@@ -60,7 +61,7 @@ public class TDAIActionFollowTarget : TDAIActionMove
     {
         if (_moveStart)
         {
-            if (transform.position.HorizontalEqula(_nextPos))
+            if (transform.position.EqualXY(_nextPos))
             {
                 _pathIndex++;
                 if (_pathIndex >= path.corners.Length)
@@ -85,7 +86,7 @@ public class TDAIActionFollowTarget : TDAIActionMove
   
                 }
             }
-            if (transform.position.HorizontalSqrDistance(currentTarget.position) <= _nextPos.HorizontalSqrDistance(currentTarget.position))
+            if (transform.position.SqrDistanceXY(currentTarget.position) <= _nextPos.SqrDistanceXY(currentTarget.position))
             {
                 _dir = Vector3.zero;
                 _movement.SetMoveDirection(_dir);
@@ -93,7 +94,7 @@ public class TDAIActionFollowTarget : TDAIActionMove
                 _moveStart = false;
                 return;
             }
-            _dir = transform.position.HorizontalDirctionTo(_nextPos);
+            _dir = transform.position.DirectionToXY(_nextPos);
             _movement.SetMoveDirection(_dir);
         }
     }
@@ -101,18 +102,20 @@ public class TDAIActionFollowTarget : TDAIActionMove
 
     protected float CalculateTargetTolerentDistance(Transform selfTRS, Transform targetTRS)
     {
-        RaycastHit hit;//通过打一条射线，获取射线击中的点，从这个点到物体中心距离作为TargetRadius
-  
-        if (Physics.Raycast(selfTRS.position, (targetTRS.position - selfTRS.position).normalized, out hit, targetTRS.position.HorizontalSqrDistance(selfTRS.position), 1 << targetTRS.gameObject.layer))
+        RaycastHit2D hit;//通过打一条射线，获取射线击中的点，从这个点到物体中心距离作为TargetRadius
+
+
+        hit = Physics2D.Raycast(selfTRS.position, (targetTRS.position - selfTRS.position).normalized, selfTRS.position.DistanceXY(targetTRS.position), 1 << targetTRS.gameObject.layer);
+        if (hit)
         {
-            targetRadius = hit.point.HorizontalDistance(targetTRS.position);
+            targetRadius = Vector2.Distance(hit.point,targetTRS.position);
         }
         else
         {
             targetRadius = 0.5f;
         }
 
-        return Mathf.Min(transform.position.HorizontalDistance(currentTarget.position), (selfRadius + targetRadius + stoppingDistance));//区一个较小的值作为最终点的位置容差
+        return Mathf.Min( transform.position.DistanceXY(currentTarget.position), (selfRadius + targetRadius + stoppingDistance));//区一个较小的值作为最终点的位置容差
     }
 
     private bool UpdateTarget(Transform newtarget)
@@ -137,7 +140,7 @@ public class TDAIActionFollowTarget : TDAIActionMove
 
     protected bool IsTargetPosChange()
     {
-        if(targetPos.HorizontalEqula(currentTarget.transform.position))
+        if(targetPos.EqualXY(currentTarget.transform.position))
         {
             return false;
         }
@@ -149,10 +152,26 @@ public class TDAIActionFollowTarget : TDAIActionMove
 
     private void OnDrawGizmos()
     {
-        if(_nextPos != null)
+        Gizmos.color = Color.cyan;
+        for (int i = 0; i < path.corners.Length; i++)
         {
-            Gizmos.color = Color.green;
-            Gizmos.DrawSphere(_nextPos, 0.3f);
+            if (i ==0)
+            {
+                Gizmos.DrawLine(transform.position, path.corners[i]);
+            }
+            else
+            {
+                Gizmos.DrawLine(path.corners[i - 1], path.corners[i]);
+            }
+            if(i == path.corners.Length -1)
+            {
+                Gizmos.DrawLine(path.corners[i], targetPos);
+            }
+      
+               
+            
+           
+            Gizmos.DrawWireSphere(path.corners[i], 0.1f);
         }
     }
 }

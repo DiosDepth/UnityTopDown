@@ -67,37 +67,37 @@ public class TDAIDecisionDistanceToTarget : TDAIDecision
         switch (compare)
         {
             case TDEnums.CompareType.Greater:
-                if (transform.position.HorizontalSqrDistance(target.position) > Mathf.Pow(thresholdDistance, 2))
+                if (transform.position.SqrDistanceXY(target.position) > Mathf.Pow(thresholdDistance, 2))
                 {
                     result = true;
                 }
                 break;
             case TDEnums.CompareType.GreaterEqula:
-                if (transform.position.HorizontalSqrDistance(target.position) >= Mathf.Pow(thresholdDistance, 2))
+                if (transform.position.SqrDistanceXY(target.position) >= Mathf.Pow(thresholdDistance, 2))
                 {
                     result = true;
                 }
                 break;
             case TDEnums.CompareType.Equla:
-                if (transform.position.HorizontalEqula(target.position))
+                if (transform.position.EqualXY(target.position))
                 {
                     result = true;
                 }
                 break;
             case TDEnums.CompareType.LessEqula:
-                if (transform.position.HorizontalSqrDistance(target.position) <= Mathf.Pow(thresholdDistance, 2))
+                if (transform.position.SqrDistanceXY(target.position) <= Mathf.Pow(thresholdDistance, 2))
                 {
                     result = true;
                 }
                 break;
             case TDEnums.CompareType.Less:
-                if (transform.position.HorizontalSqrDistance(target.position) < Mathf.Pow(thresholdDistance, 2))
+                if (transform.position.SqrDistanceXY(target.position) < Mathf.Pow(thresholdDistance, 2))
                 {
                     result = true;
                 }
                 break;
             case TDEnums.CompareType.NonEqula:
-                if (transform.position.HorizontalSqrDistance(target.position) != Mathf.Pow(thresholdDistance, 2))
+                if (transform.position.SqrDistanceXY(target.position) != Mathf.Pow(thresholdDistance, 2))
                 {
                     result = true;
                 }

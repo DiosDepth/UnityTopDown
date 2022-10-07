@@ -137,16 +137,6 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
             inputDirection.y = callbackContext.ReadValue<Vector2>().y;
     }
 
-    public void HandleMovementAI(NavMeshAgent navmeshagent)
-    {
-        if (movementForbiden)
-        {
-            inputDirection = Vector3.zero;
-            return;
-        }
-
-
-    }
 
 
     public override void EarlyUpdateAbility()
@@ -208,7 +198,7 @@ public class TDCharacterAbilityMovement : TDCharacterAbility
         }
 
         float m_tempspeedmodify = 1;
-        switch ((owner.GetAbilityByUniqueSkillName("HandleWeapon") as TDCharacterAbilityHandleWeapon).currentMainWeapon?.weaponType)
+        switch ((owner.GetAbilityByUniqueSkillName("HandleWeapon") as TDCharacterAbilityHandleWeapon)?.currentMainWeapon?.weaponType)
         {
             case WeaponNameSpace.WeaponType.Instante:
                 break;
